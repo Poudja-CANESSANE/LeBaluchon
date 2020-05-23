@@ -9,7 +9,6 @@
 import Foundation
 
 struct WeatherIcon {
-
     static let weatherIcons = [
         "Clear": "☀️",
         "Clouds": "☁️",

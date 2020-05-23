@@ -9,55 +9,44 @@
 import Foundation
 
 class CurrencyNetworkManager {
-    static let shared = CurrencyNetworkManager()
-    private init() {}
+    func getUrl(service: Services, stringToTranslate: String? = nil, city: Cities? = nil) -> URL? {
+            guard var urlComponents = URLComponents(string: service.baseUrl) else { return nil }
 
-    private static let currencyUrl = URL(string: "http://data.fixer.io/api/latest?access_key=1ad582ca1c36a3ebd81816f01af88fb7")!
-    private var task: URLSessionTask?
+            urlComponents.queryItems = [URLQueryItem]()
+            service.urlParameters.forEach { (key, value) in
+                urlComponents.queryItems?.append(URLQueryItem(name: key, value: value))
+            }
+            switch service {
+            case .currency: return urlComponents.url
+            case .translation:
+                guard let stringToTranslate = stringToTranslate else {return nil}
+                urlComponents.queryItems?.append(URLQueryItem(name: "q", value: stringToTranslate))
+            case .weather:
+                guard let city = city else {return nil}
+                urlComponents.queryItems?.append(URLQueryItem(name: "q", value: city.name))
+            }
 
-    func getCurrency(completion: @escaping (Result<Float, NetworkError>) -> Void) {
-        let session = URLSession(configuration: .default)
-        task?.cancel()
-        task = session.dataTask(with: CurrencyNetworkManager.currencyUrl, completionHandler: { (data, response, error) in
-            
-            DispatchQueue.main.async {
-                guard error == nil else {
-                    completion(.failure(.getError))
-                    return
-                }
-                guard let data = data else {
-                    completion(.failure(.noData))
-                    return
-                }
+            return urlComponents.url
+        }
 
-                guard let response = response as? HTTPURLResponse else {
-                    completion(.failure(.noResponse))
-                    return
-                }
+    func getCurrency(completion: @escaping (Result<Double, NetworkError>) -> Void) {
+        guard let latestCurrencyUrl = getUrl(service: .currency) else {
+            completion(.failure(.cannotGetUrl))
+            return
+        }
+        print(latestCurrencyUrl)
 
-                guard response.statusCode == 200 else {
-                    completion(.failure(.badStatusCode))
-                    return
-                }
-
-                guard let responseJSON = try? JSONDecoder().decode([String: [String: Float]].self, from: data) else {
-                    completion(.failure(.cannotDecodeResponse))
-                    return
-                }
-
-                guard let rates = responseJSON["rates"] else {
-                    completion(.failure(.getError))
-                    return
-                }
-
-                guard let usRate = rates["USD"] else {
-                    completion(.failure(.getError))
+        ServiceContainer.networkManager.fetchData(url: latestCurrencyUrl) { (result: Result<CurrencyLatestResult, NetworkError>) in
+            switch result {
+            case .failure(let networkError): completion(.failure(networkError))
+            case .success(let response):
+                guard let usRate = response.rates["USD"] else {
+                    completion(.failure(.cannotUnwrapUsRate))
                     return
                 }
 
                 completion(.success(usRate))
             }
-        })
-        task?.resume()
+        }
     }
 }

@@ -9,103 +9,50 @@
 import Foundation
 
 class WeatherNetworkManager {
-    static let shared = WeatherNetworkManager()
-    private init() {}
+    func getNYCAndSLTWeathers(completion: @escaping (Result<[WeatherObject], NetworkError>) -> ()) {
+        guard let nycWeatherUrl = ServiceContainer.urlProviderImplementation.getWeatherUrl(city: .newYorkCity) else {
+            completion(.failure(.cannotGetUrl))
+            return
+        }
+        print(nycWeatherUrl)
 
-    private static let nycWeatherUrl = URL(string: "http://api.openweathermap.org/data/2.5/weather?q=New%20York%20City&appid=d62aa4043ab2eee875bd047c423b9962&units=metric")!
-    private static let sltWeatherUrl = URL(string: "http://api.openweathermap.org/data/2.5/weather?q=Savigny-le-Temple&appid=d62aa4043ab2eee875bd047c423b9962&units=metric")!
-
-    private var task: URLSessionTask?
-
-    func getNYCAndSLTWeathers(callback: @escaping (Result<Weathers?, NetworkError>) -> ()) {
-        let session = URLSession(configuration: .default)
-        task?.cancel()
-        task = session.dataTask(with: WeatherNetworkManager.nycWeatherUrl , completionHandler: { (data, response, error) in
-            DispatchQueue.main.async {
-                guard let data = data else {
-                    callback(.failure(.noData))
-                    return
-                }
-                guard error == nil else {
-                    callback(.failure(.getError))
-                    return
-                }
-                guard let response = response as? HTTPURLResponse else {
-                    callback(.failure(.noResponse))
-                    return
-                }
-                guard response.statusCode == 200 else {
-                    callback(.failure(.badStatusCode))
-                    return
-                }
-                guard let responseJSON = try? JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as? [String: Any] else {
-                    callback(.failure(.cannotDecodeResponse))
-                    return
-                }
-
+        ServiceContainer.networkManager.fetchData(url: nycWeatherUrl) { (result: Result<WeatherResult, NetworkError>) in
+            switch result {
+            case .failure(let networkError): completion(.failure(networkError))
+            case .success(let nycResponse):
                 self.getSLTWeather { (result) in
                     switch result {
-                    case.failure(let networkError):
-                        callback(.failure(networkError))
-                    case .success(let weather):
-                        guard let sltWeather = weather else {return}
-                        guard let nycWeather = self.createWeatherFrom(data: responseJSON) else {return}
-                        let weathers = Weathers(weathers: [nycWeather, sltWeather])
-                        callback(.success(weathers))
+                    case .failure(let networkError): completion(.failure(networkError))
+                    case .success(let sltResponse):
+                        let nycWeather = self.createWeatherObject(fromResponse: nycResponse)
+                        let sltWeather = self.createWeatherObject(fromResponse: sltResponse)
+                        completion(.success([nycWeather, sltWeather]))
                     }
                 }
             }
-        })
-        task?.resume()
+        }
     }
 
-    private func getSLTWeather(callback: @escaping (Result<Weather?, NetworkError>) -> ()) {
-        let session = URLSession(configuration: .default)
-        task?.cancel()
-        task = session.dataTask(with: WeatherNetworkManager.sltWeatherUrl , completionHandler: { (data, response, error) in
-            DispatchQueue.main.async {
-                guard let data = data else {
-                    callback(.failure(.noData))
-                    return
-                }
-                guard error == nil else {
-                    callback(.failure(.getError))
-                    return
-                }
-                guard let response = response as? HTTPURLResponse else {
-                    callback(.failure(.noResponse))
-                    return
-                }
-                guard response.statusCode == 200 else {
-                    callback(.failure(.badStatusCode))
-                    return
-                }
-                guard let responseJSON = try? JSONSerialization.jsonObject(with: data, options: .mutableLeaves) as? [String: Any] else {
-                    callback(.failure(.cannotDecodeResponse))
-                    return
-                }
+    private func getSLTWeather(completion: @escaping (Result<WeatherResult, NetworkError>) -> ()) {
+        guard let sltWeatherUrl = ServiceContainer.urlProviderImplementation.getWeatherUrl(city: .savignyLeTemple) else {
+            completion(.failure(.cannotGetUrl))
+            return
+        }
+        print(sltWeatherUrl)
 
-                let sltWeather = self.createWeatherFrom(data: responseJSON)
-                callback(.success(sltWeather))
+        ServiceContainer.networkManager.fetchData(url: sltWeatherUrl) { (result: Result<WeatherResult, NetworkError>) in
+            switch result {
+            case .failure(let networkError): completion(.failure(networkError))
+            case .success(let response): completion(.success(response))
             }
-        })
-        task?.resume()
+        }
     }
 
-    private func createWeatherFrom(data: [String: Any]) -> Weather? {
-        guard let weatherData = data["weather"] as? Array<[String: Any]> else { return nil }
-
-        guard let main = weatherData[0]["main"] as? String else { return nil }
-
-        guard let weatherIcon = WeatherIcon.weatherIcons[main] else { return nil }
-
-        guard let description = weatherData[0]["description"] as? String else { return nil }
-
-        guard let mainData = data["main"] as? [String: Any] else { return nil }
-        
-        guard let temp = mainData["temp"] as? Double else { return nil }
-
-        let weather = Weather(temperature: Int(temp), main: weatherIcon, description: description)
+    private func createWeatherObject(fromResponse response: WeatherResult) -> WeatherObject{
+        let temperature = Int(response.main.temp)
+        let main = response.weather[0].main
+        let description = response.weather[0].description
+        let weather = WeatherObject(temperature: temperature, main: main, description: description)
         return weather
     }
 }

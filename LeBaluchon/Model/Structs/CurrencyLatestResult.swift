@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct Rate: Codable {
-    var rates: [String: Float]
+struct CurrencyLatestResult: Codable {
+    let rates: [String: Double]
 }
