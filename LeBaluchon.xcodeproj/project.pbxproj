@@ -10,7 +10,6 @@
 		AC3FC4CA246C86300058581D /* WeatherResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3FC4C9246C86300058581D /* WeatherResult.swift */; };
 		AC3FC4CC246F00EC0058581D /* WeatherIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3FC4CB246F00EC0058581D /* WeatherIcon.swift */; };
 		AC3FC4CE24701C8A0058581D /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3FC4CD24701C8A0058581D /* NetworkError.swift */; };
-		AC3FC4D224717D6E0058581D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3FC4D124717D6E0058581D /* SceneDelegate.swift */; };
 		AC3FC4D4247195BE0058581D /* TranslationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC3FC4D3247195BE0058581D /* TranslationResult.swift */; };
 		AC8826A9246B521900EE06B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8826A8246B521900EE06B2 /* AppDelegate.swift */; };
 		AC8826B0246B521900EE06B2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC8826AE246B521900EE06B2 /* Main.storyboard */; };
@@ -46,7 +45,6 @@
 		AC3FC4C9246C86300058581D /* WeatherResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherResult.swift; sourceTree = "<group>"; };
 		AC3FC4CB246F00EC0058581D /* WeatherIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherIcon.swift; sourceTree = "<group>"; };
 		AC3FC4CD24701C8A0058581D /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
-		AC3FC4D124717D6E0058581D /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		AC3FC4D3247195BE0058581D /* TranslationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationResult.swift; sourceTree = "<group>"; };
 		AC8826A5246B521900EE06B2 /* LeBaluchon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeBaluchon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC8826A8246B521900EE06B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -163,7 +161,6 @@
 			isa = PBXGroup;
 			children = (
 				AC8826A8246B521900EE06B2 /* AppDelegate.swift */,
-				AC3FC4D124717D6E0058581D /* SceneDelegate.swift */,
 				AC8826B1246B521B00EE06B2 /* Assets.xcassets */,
 				AC8826B6246B521B00EE06B2 /* Info.plist */,
 			);
@@ -321,7 +318,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AC8826DB246B549E00EE06B2 /* WeatherNetworkManager.swift in Sources */,
-				AC3FC4D224717D6E0058581D /* SceneDelegate.swift in Sources */,
 				AC3FC4CC246F00EC0058581D /* WeatherIcon.swift in Sources */,
 				AC8826A9246B521900EE06B2 /* AppDelegate.swift in Sources */,
 				AC8826D5246B543D00EE06B2 /* NetworkManager.swift in Sources */,
@@ -501,7 +497,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y56L8SS28B;
 				INFOPLIST_FILE = "LeBaluchon/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -520,7 +516,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y56L8SS28B;
 				INFOPLIST_FILE = "LeBaluchon/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
