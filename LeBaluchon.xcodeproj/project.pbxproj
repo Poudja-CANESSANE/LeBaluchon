@@ -104,9 +104,9 @@
 			isa = PBXGroup;
 			children = (
 				AC8826DC246B752D00EE06B2 /* CurrencyLatestResult.swift */,
+				AC3FC4D3247195BE0058581D /* TranslationResult.swift */,
 				AC3FC4C9246C86300058581D /* WeatherResult.swift */,
 				AC3FC4CB246F00EC0058581D /* WeatherIcon.swift */,
-				AC3FC4D3247195BE0058581D /* TranslationResult.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";

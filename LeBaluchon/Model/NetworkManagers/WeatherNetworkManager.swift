@@ -50,9 +50,11 @@ class WeatherNetworkManager {
 
     private func createWeatherObject(fromResponse response: WeatherResult) -> WeatherObject{
         let temperature = Int(response.main.temp)
+        let temperatureMin = Int(response.main.tempMin)
+        let temperatureMax = Int(response.main.tempMax)
         let main = response.weather[0].main
         let description = response.weather[0].description
-        let weather = WeatherObject(temperature: temperature, main: main, description: description)
+        let weather = WeatherObject(temperature: temperature, tempMin: temperatureMin, tempMax: temperatureMax, main: main, description: description)
         return weather
     }
 }

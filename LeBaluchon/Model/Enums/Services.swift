@@ -24,7 +24,7 @@ enum Services {
         case .currency:
             return ["access_key": "1ad582ca1c36a3ebd81816f01af88fb7"]
         case .translation:
-            return ["key": "AIzaSyC_XVOjoWJ-R3tDwy8VHBQitgEKJdMhQCY", "target": "en"]
+            return ["key": "AIzaSyC_XVOjoWJ-R3tDwy8VHBQitgEKJdMhQCY"]
         case .weather:
             return ["appid": "d62aa4043ab2eee875bd047c423b9962", "units": "metric"]
         }

@@ -13,20 +13,28 @@ class CurrencyViewController: UIViewController {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var convertedAmountLabel: UILabel!
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        makeNetworkRequest()
+    }
+
+    @IBAction func didTapConvertButton(_ sender: UIButton) {
+        updateLabel()
+    }
+
     @IBAction func dismissKeyboard(_ sender: UITapGestureRecognizer) {
         textField.resignFirstResponder()
     }
 
-    @IBAction func didTapConvertButton(_ sender: UIButton) {
-        makeNetworkRequest()
-    }
+    private let currencyNetworkManager = CurrencyNetworkManager()
+    private var usRate: Double = 0
 
     private func makeNetworkRequest() {
         currencyNetworkManager.getCurrency { (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let usRate):
-                    self.updateLabel(with: usRate)
+                    self.usRate = usRate
                 case .failure(let error):
                     self.presentAlert(with: error.message)
                 }
@@ -34,14 +42,20 @@ class CurrencyViewController: UIViewController {
         }
     }
 
-    private func updateLabel(with usRate: Double) {
-        guard let amountToConvert = self.textField.text else { return }
-        guard let amountToConvertFloat = Float(amountToConvert) else { return }
-        let amount = (amountToConvertFloat * Float(usRate))
-        self.convertedAmountLabel.text = String(format: "%.2f", amount) + "$"
-    }
+    private func updateLabel() {
+        guard let amountToConvert = textField.text else {
+            presentAlert(with: "Please enter an amount to convert to dollars $ !")
+            return
+        }
 
-    private let currencyNetworkManager = CurrencyNetworkManager()
+        guard let amountToConvertFloat = Double(amountToConvert) else {
+            presentAlert(with: "Please enter a number !")
+            return
+        }
+
+        let amount = (amountToConvertFloat * usRate)
+        convertedAmountLabel.text = String(format: "%.2f", amount) + "$"
+    }
 
     private func presentAlert(with message: String) {
         let alertViewController = UIAlertController(

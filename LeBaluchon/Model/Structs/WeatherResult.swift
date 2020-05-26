@@ -9,7 +9,7 @@
 import Foundation
 
 struct WeatherObject {
-    let temperature: Int
+    let temperature, tempMin, tempMax: Int
     let main, description: String
 }
 
@@ -19,7 +19,13 @@ struct WeatherResult: Codable {
 }
 
 struct Main: Codable {
-    let temp: Double
+    let temp, tempMin, tempMax: Double
+
+    enum CodingKeys: String, CodingKey {
+        case temp
+        case tempMin = "temp_min"
+        case tempMax = "temp_max"
+    }
 }
 
 struct Weather: Codable {

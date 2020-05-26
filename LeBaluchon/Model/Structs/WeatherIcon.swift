@@ -10,11 +10,20 @@ import Foundation
 
 struct WeatherIcon {
     static let weatherIcons = [
-        "Clear": "☀️",
-        "Clouds": "☁️",
-        "Partially Cloudy": "⛅️",
+        "Thunderstorm": "⛈",
+        "Drizzle": "🌦",
         "Rain": "🌧",
-        "Snow": "🌨",
-        "Thunderstorm": "⛈"
+        "Snow": "❄️",
+        "Mist": "🌫",
+        "Smoke": "🌫",
+        "Haze": "🌫",
+        "Dust": "🌫",
+        "Fog": "🌫",
+        "Sand": "🌫",
+        "Ash": "🌫",
+        "Squall": "💨",
+        "Tornado": "🌪",
+        "Clear": "☀️",
+        "Clouds": "☁️"
     ]
 }

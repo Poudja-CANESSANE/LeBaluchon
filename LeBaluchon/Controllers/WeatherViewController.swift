@@ -11,19 +11,27 @@ import UIKit
 class WeatherViewController: UIViewController {
 
     @IBOutlet weak var nycTempLabel: UILabel!
+    @IBOutlet weak var nycTempMaxLabel: UILabel!
+    @IBOutlet weak var nycTempMinLabel: UILabel!
     @IBOutlet weak var nycDescLabel: UILabel!
     @IBOutlet weak var nycIconLabel: UILabel!
     @IBOutlet weak var sltTempLabel: UILabel!
+    @IBOutlet weak var sltTempMaxLabel: UILabel!
+    @IBOutlet weak var sltTempMinLabel: UILabel!
     @IBOutlet weak var sltDescLabel: UILabel!
     @IBOutlet weak var sltIconLabel: UILabel!
 
     lazy private var labels = [
         Cities.newYorkCity.name: [
             nycTempLabel,
+            nycTempMaxLabel,
+            nycTempMinLabel,
             nycDescLabel,
             nycIconLabel],
         Cities.savignyLeTemple.name: [
             sltTempLabel,
+            sltTempMaxLabel,
+            sltTempMinLabel,
             sltDescLabel,
             sltIconLabel]
     ]
@@ -52,8 +60,10 @@ class WeatherViewController: UIViewController {
     private func updateLabels(city: Cities, from weathers: [WeatherObject]) {
         let range = city == .newYorkCity ? 0 : 1
         labels["\(city.name)"]?[0]?.text = "\(weathers[range].temperature)°C"
-        labels["\(city.name)"]?[1]?.text = weathers[range].description.capitalized
-        labels["\(city.name)"]?[2]?.text = WeatherIcon.weatherIcons[weathers[range].main]
+        labels["\(city.name)"]?[1]?.text = "\(weathers[range].tempMax)°C"
+        labels["\(city.name)"]?[2]?.text = "\(weathers[range].tempMin)°C"
+        labels["\(city.name)"]?[3]?.text = weathers[range].description.capitalized
+        labels["\(city.name)"]?[4]?.text = WeatherIcon.weatherIcons[weathers[range].main]
     }
 
     private func presentAlert(msg: String) {

@@ -21,7 +21,7 @@ class UrlProviderImplementation: UrlProvider {
         return urlComponents.url
     }
     
-    func getTranslationUrl(stringToTranslate: String) -> URL? {
+    func getTranslationUrl(stringToTranslate: String, targetLanguage: String) -> URL? {
         let service = Services.translation
         guard var urlComponents = URLComponents(string: service.baseUrl) else { return nil }
 
@@ -32,6 +32,7 @@ class UrlProviderImplementation: UrlProvider {
         }
 
         urlComponents.queryItems?.append(URLQueryItem(name: "q", value: stringToTranslate))
+        urlComponents.queryItems?.append(URLQueryItem(name: "target", value: targetLanguage))
         return urlComponents.url
     }
 
@@ -48,7 +49,7 @@ class UrlProviderImplementation: UrlProvider {
         return urlComponents.url
     }
 
-    func getUrl(service: Services, stringToTranslate: String? = nil, city: Cities? = nil) -> URL? {
+    func getUrl(service: Services, stringToTranslate: String? = nil, targetLanguage: String? = nil, city: Cities? = nil) -> URL? {
         guard var urlComponents = URLComponents(string: service.baseUrl) else { return nil }
 
         urlComponents.queryItems = [URLQueryItem]()
@@ -59,7 +60,9 @@ class UrlProviderImplementation: UrlProvider {
         case .currency: return urlComponents.url
         case .translation:
             guard let stringToTranslate = stringToTranslate else {return nil}
+            guard let targetLanguage = targetLanguage else {return nil}
             urlComponents.queryItems?.append(URLQueryItem(name: "q", value: stringToTranslate))
+            urlComponents.queryItems?.append(URLQueryItem(name: "target", value: targetLanguage))
         case .weather:
             guard let city = city else {return nil}
             urlComponents.queryItems?.append(URLQueryItem(name: "q", value: city.name))
