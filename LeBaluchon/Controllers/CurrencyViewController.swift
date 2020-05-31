@@ -11,7 +11,7 @@ import UIKit
 class CurrencyViewController: UIViewController {
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var convertedAmountLabel: UILabel!
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         makeNetworkRequest()

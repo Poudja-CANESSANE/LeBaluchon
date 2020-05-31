@@ -15,9 +15,9 @@ class AlertManager {
             title: "Error",
             message: message,
             preferredStyle: .alert)
-        
+
         let action = UIAlertAction(title: "OK", style: .cancel)
         alertViewController.addAction(action)
-        presentingViewController.present(alertViewController,animated: true)
+        presentingViewController.present(alertViewController, animated: true)
     }
 }

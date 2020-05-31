@@ -10,7 +10,7 @@ import UIKit
 
 class WeatherTableViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
-    
+
     private var weathers: [WeatherObject]?
 
     private var iconsId: [City: String] = [:]
@@ -96,7 +96,7 @@ class WeatherTableViewController: UIViewController {
 
     private func getIconImage(fromIconsData iconsData: [City: Data], weatherObject: WeatherObject) -> UIImage? {
         let iconsStringData = getIconsStringData(fromIconsCityData: iconsData)
-        
+
         guard let data = iconsStringData[weatherObject.name] else {
             return nil
         }
@@ -123,9 +123,11 @@ extension WeatherTableViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return City.allCases.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weatherCell = tableView.dequeueReusableCell(withIdentifier: "weatherCell", for: indexPath) as? WeatherTableViewCell else {return WeatherTableViewCell()}
+        guard let weatherCell = tableView.dequeueReusableCell(
+            withIdentifier: "weatherCell",
+            for: indexPath) as? WeatherTableViewCell else {return WeatherTableViewCell()}
 
 //        print("\(indexPath.row) indexPath.row")
 //        print("\(String(describing: weathers?.count)) weathers?.count")

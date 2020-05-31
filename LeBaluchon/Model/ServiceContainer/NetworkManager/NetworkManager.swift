@@ -9,6 +9,6 @@
 import Foundation
 
 protocol NetworkManager {
-    func fetchData<T: Codable>(url: URL, completion: @escaping (Result<T, NetworkError>) -> ())
-    func fetchData(url: URL, completion: @escaping (Result<Data, NetworkError>) -> ())
+    func fetchData<T: Codable>(url: URL, completion: @escaping (Result<T, NetworkError>) -> Void)
+    func fetchData(url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void)
 }

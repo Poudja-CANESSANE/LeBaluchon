@@ -21,8 +21,10 @@ class TranslationNetworkManager {
     func translate(
         textToTranslate: String,
         targetLanguage: String,
-        completion: @escaping (Result<Translation, NetworkError>) -> ()) {
-        guard let translationUrl = urlProvider.getTranslationUrl(stringToTranslate: textToTranslate, targetLanguage: targetLanguage) else {
+        completion: @escaping (Result<Translation, NetworkError>) -> Void) {
+        guard let translationUrl = urlProvider.getTranslationUrl(
+            stringToTranslate: textToTranslate,
+            targetLanguage: targetLanguage) else {
             completion(.failure(.cannotGetUrl))
             return
         }
@@ -35,22 +37,24 @@ class TranslationNetworkManager {
                     let translation = try self.createTranslation(fromResponse: response)
                     completion(.success(translation))
                 } catch {
-                    let error = error
-                    //Pas bon force casting
-                    completion(.failure(error as! NetworkError))
+                    guard let error = error as? NetworkError else {return}
+                    completion(.failure(error))
                 }
-                
             }
         }
     }
 
     private func createTranslation(fromResponse response: TranslationResult) throws -> Translation {
         print(response)
-        guard var translatedText = response.data.translations.first?.translatedText else { throw NetworkError.cannotCreateTranslation }
+        guard var translatedText = response.data.translations.first?.translatedText else {
+            throw NetworkError.cannotCreateTranslation
+        }
 
-        guard let detectedSourceLanguage = response.data.translations.first?.detectedSourceLanguage else { throw  NetworkError.cannotCreateTranslation}
+        guard let detectedSourceLanguage = response.data.translations.first?.detectedSourceLanguage else {
+            throw  NetworkError.cannotCreateTranslation
+        }
 
-        if translatedText.contains("&#39;") || translatedText.contains("&quot;"){
+        if translatedText.contains("&#39;") || translatedText.contains("&quot;") {
             translatedText = translatedText.replacingOccurrences(of: "&#39;", with: "‘")
             translatedText = translatedText.replacingOccurrences(of: "&quot;", with: "\"")
         }

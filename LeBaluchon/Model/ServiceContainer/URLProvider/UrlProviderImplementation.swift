@@ -20,7 +20,7 @@ class UrlProviderImplementation: UrlProvider {
 
         return urlComponents.url
     }
-    
+
     func getTranslationUrl(stringToTranslate: String, targetLanguage: String) -> URL? {
         let service = Service.translation
         guard var urlComponents = URLComponents(string: service.baseUrl) else { return nil }

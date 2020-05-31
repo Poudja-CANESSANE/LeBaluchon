@@ -18,7 +18,9 @@ class WeatherNetworkManager {
         self.urlProvider = urlProvider
     }
 
-    func getWeathers(forCities cities: [City], completion: @escaping (Result<[City: WeatherObject], NetworkError>) -> ()) {
+    func getWeathers(
+        forCities cities: [City],
+        completion: @escaping (Result<[City: WeatherObject], NetworkError>) -> Void) {
         let urls = getUrlsForWeathers(fromCities: cities)
         getWeatherObjects(fromUrls: urls) { result in
             switch result {
@@ -28,7 +30,9 @@ class WeatherNetworkManager {
         }
     }
 
-    func getWeatherIconsData(forCitiesAndIconIds citiesAndIconIds: [City: String], completion: @escaping (Result<[City: Data], NetworkError>) -> ()) {
+    func getWeatherIconsData(
+        forCitiesAndIconIds citiesAndIconIds: [City: String],
+        completion: @escaping (Result<[City: Data], NetworkError>) -> Void) {
         let urls = getUrlsForWeatherIconsData(fromCitiesAndIconIds: citiesAndIconIds)
         getIconsData(fromUrls: urls) { result in
             switch result {
@@ -40,7 +44,7 @@ class WeatherNetworkManager {
 
     private func getUrlsForWeathers(fromCities cities: [City]) -> [City: URL] {
         var urls: [City: URL] = [:]
-        
+
         for city in cities {
             if let weatherUrl = urlProvider.getWeatherUrl(city: city) {
                 urls[city] = weatherUrl
@@ -50,7 +54,9 @@ class WeatherNetworkManager {
         return urls
     }
 
-    private func getWeatherObjects(fromUrls urls: [City: URL], completion: @escaping (Result<[City: WeatherObject], NetworkError>) -> ()) {
+    private func getWeatherObjects(
+        fromUrls urls: [City: URL],
+        completion: @escaping (Result<[City: WeatherObject], NetworkError>) -> Void) {
         var weatherObjects: [City: WeatherObject] = [:]
 
         for (city, url) in urls {
@@ -61,12 +67,11 @@ class WeatherNetworkManager {
                     completion(.failure(networkError))
                 case .success(let cityResponse):
                     weatherObjects[city] = self.createWeatherObject(fromResponse: cityResponse)
-                    
+
                     if weatherObjects.count == urls.count {
                         completion(.success(weatherObjects))
                     }
                 }
-                
             }
         }
     }
@@ -85,7 +90,9 @@ class WeatherNetworkManager {
         return urls
     }
 
-    private func getIconsData(fromUrls urls: [City: URL], completion: @escaping (Result<[City: Data], NetworkError>) -> ()) {
+    private func getIconsData(
+        fromUrls urls: [City: URL],
+        completion: @escaping (Result<[City: Data], NetworkError>) -> Void) {
         var iconsData: [City: Data] = [:]
 
         for (city, url) in urls {
@@ -105,7 +112,9 @@ class WeatherNetworkManager {
         }
     }
 
-    func getWeatherIconDataForWeatherViewController(iconId: String, completion: @escaping (Result<Data, NetworkError>) -> ()) {
+    func getWeatherIconDataForWeatherViewController(
+        iconId: String,
+        completion: @escaping (Result<Data, NetworkError>) -> Void) {
         guard let weatherIconUrl = urlProvider.getWeatherIconUrl(iconId: iconId) else {
             completion(.failure(.cannotGetUrl))
             return
@@ -121,7 +130,7 @@ class WeatherNetworkManager {
             }
         }
     }
-    
+
     private func createWeatherObject(fromResponse response: WeatherResult) -> WeatherObject {
         let temperature = Int(response.main.temp)
         let temperatureMin = Int(response.main.tempMin)
@@ -143,7 +152,9 @@ class WeatherNetworkManager {
         return weather
     }
 
-        private func getUrls(fromCities cities: [City]? = nil, fromCitiesAndIconIds citiesAndIconIds: [City: String]? = nil) -> [City: URL] {
+        private func getUrls(
+            fromCities cities: [City]? = nil,
+            fromCitiesAndIconIds citiesAndIconIds: [City: String]? = nil) -> [City: URL] {
             var urls: [City: URL] = [:]
 
             if let cities = cities {
@@ -163,7 +174,6 @@ class WeatherNetworkManager {
                 }
             }
 
-            
     //        if sequence.self == [City].self {
     //            for city in sequence.enumerated() {
     //                if let weatherUrl = urlProviderImplementation.getWeatherIconUrl(icon: iconId) {
