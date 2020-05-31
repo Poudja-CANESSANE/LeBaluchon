@@ -9,6 +9,7 @@
 import Foundation
 
 class ServiceContainer {
-    static let urlProviderImplementation: UrlProvider = UrlProviderImplementation()
-    static let networkManager = NetworkManager()
+    static let urlProvider: UrlProvider = UrlProviderImplementation()
+    static let networkManager: NetworkManager = NetworkManagerImplementation()
+    static let alertManager = AlertManager()
 }

@@ -8,14 +8,15 @@
 
 import Foundation
 
-enum Services {
-    case currency, translation, weather
+enum Service {
+    case currency, translation, weather, weatherIcon
 
     var baseUrl: String {
         switch self {
         case .currency: return "http://data.fixer.io/api/latest?"
         case .translation: return "https://translation.googleapis.com/language/translate/v2?"
         case .weather: return "http://api.openweathermap.org/data/2.5/weather?"
+        case .weatherIcon: return "http://openweathermap.org/img/wn/"
         }
     }
 
@@ -27,6 +28,7 @@ enum Services {
             return ["key": "AIzaSyC_XVOjoWJ-R3tDwy8VHBQitgEKJdMhQCY"]
         case .weather:
             return ["appid": "d62aa4043ab2eee875bd047c423b9962", "units": "metric"]
+        case .weatherIcon: return [:]
         }
     }
 }

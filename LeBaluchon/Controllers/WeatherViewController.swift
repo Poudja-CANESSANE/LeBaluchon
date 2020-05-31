@@ -10,66 +10,87 @@ import UIKit
 
 class WeatherViewController: UIViewController {
 
-    @IBOutlet weak var nycTempLabel: UILabel!
-    @IBOutlet weak var nycTempMaxLabel: UILabel!
-    @IBOutlet weak var nycTempMinLabel: UILabel!
-    @IBOutlet weak var nycDescLabel: UILabel!
-    @IBOutlet weak var nycIconLabel: UILabel!
+    @IBOutlet weak var nyTempLabel: UILabel!
+    @IBOutlet weak var nyTempMaxLabel: UILabel!
+    @IBOutlet weak var nyTempMinLabel: UILabel!
+    @IBOutlet weak var nyDescLabel: UILabel!
+    @IBOutlet weak var nyIconImage: UIImageView!
     @IBOutlet weak var sltTempLabel: UILabel!
     @IBOutlet weak var sltTempMaxLabel: UILabel!
     @IBOutlet weak var sltTempMinLabel: UILabel!
     @IBOutlet weak var sltDescLabel: UILabel!
-    @IBOutlet weak var sltIconLabel: UILabel!
+    @IBOutlet weak var sltIconImage: UIImageView!
 
     lazy private var labels = [
-        Cities.newYorkCity.name: [
-            nycTempLabel,
-            nycTempMaxLabel,
-            nycTempMinLabel,
-            nycDescLabel,
-            nycIconLabel],
-        Cities.savignyLeTemple.name: [
+        City.newYork: [
+            nyTempLabel,
+            nyTempMaxLabel,
+            nyTempMinLabel,
+            nyDescLabel],
+        City.savignyLeTemple: [
             sltTempLabel,
             sltTempMaxLabel,
             sltTempMinLabel,
-            sltDescLabel,
-            sltIconLabel]
+            sltDescLabel]
     ]
 
-    private let weatherNetworkManager = WeatherNetworkManager()
-    
+    private let weatherNetworkManager = WeatherNetworkManager(
+        networkManager: ServiceContainer.networkManager,
+        urlProvider: ServiceContainer.urlProvider)
+
+    private let alertManager = ServiceContainer.alertManager
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         updateUIWithDownloadedWeathers()
     }
 
     private func updateUIWithDownloadedWeathers() {
-        weatherNetworkManager.getNYCAndSLTWeathers { (result) in
+        weatherNetworkManager.getWeathers(forCities: [.newYork, .savignyLeTemple]) { (result) in
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let networkError):
-                    self.presentAlert(msg: networkError.message)
+                    self.presentAlert(msg: networkError.message + #function)
                 case .success(let weathers):
-                    self.updateLabels(city: .newYorkCity, from: weathers)
-                    self.updateLabels(city: .savignyLeTemple, from: weathers)
+                    guard let nyIcon = weathers[.newYork]?.iconId else {
+                        self.presentAlert(msg: "Cannot unwrap nyIcon !")
+                        return
+                    }
+
+                    guard let sltIcon = weathers[.savignyLeTemple]?.iconId else {
+                        self.presentAlert(msg: "Cannot unwrap sltIcon !")
+                        return
+                    }
+
+                    self.updateImageViewWithWeatherIcon(imageView: self.nyIconImage, iconId: nyIcon)
+                    self.updateImageViewWithWeatherIcon(imageView: self.sltIconImage, iconId: sltIcon)
+                    self.updateLabels(city: .newYork, from: weathers[.newYork]!)
+                    self.updateLabels(city: .savignyLeTemple, from: weathers[.savignyLeTemple]!)
                 }
             }
         }
     }
 
-    private func updateLabels(city: Cities, from weathers: [WeatherObject]) {
-        let range = city == .newYorkCity ? 0 : 1
-        labels["\(city.name)"]?[0]?.text = "\(weathers[range].temperature)°C"
-        labels["\(city.name)"]?[1]?.text = "\(weathers[range].tempMax)°C"
-        labels["\(city.name)"]?[2]?.text = "\(weathers[range].tempMin)°C"
-        labels["\(city.name)"]?[3]?.text = weathers[range].description.capitalized
-        labels["\(city.name)"]?[4]?.text = WeatherIcon.weatherIcons[weathers[range].main]
+    private func updateImageViewWithWeatherIcon(imageView: UIImageView, iconId: String) {
+        weatherNetworkManager.getWeatherIconDataForWeatherViewController(iconId: iconId) { (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let networkError): self.presentAlert(msg: networkError.message + #function)
+                case .success(let data):
+                    imageView.image = UIImage(data: data)
+                }
+            }
+        }
+    }
+
+    private func updateLabels(city: City, from weather: WeatherObject) {
+        labels[city]?[0]?.text = "\(weather.temperature)°C"
+        labels[city]?[1]?.text = "\(weather.tempMax)°C"
+        labels[city]?[2]?.text = "\(weather.tempMin)°C"
+        labels[city]?[3]?.text = weather.description.capitalized
     }
 
     private func presentAlert(msg: String) {
-        let alertVC = UIAlertController(title: "Error", message: msg, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .cancel)
-        alertVC.addAction(action)
-        present(alertVC,animated: true)
+        alertManager.presentAlert(with: msg, presentingViewController: self)
     }
 }

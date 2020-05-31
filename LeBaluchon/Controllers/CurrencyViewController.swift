@@ -9,12 +9,11 @@
 import UIKit
 
 class CurrencyViewController: UIViewController {
-
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var convertedAmountLabel: UILabel!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         makeNetworkRequest()
     }
 
@@ -26,7 +25,11 @@ class CurrencyViewController: UIViewController {
         textField.resignFirstResponder()
     }
 
-    private let currencyNetworkManager = CurrencyNetworkManager()
+    private let currencyNetworkManager = CurrencyNetworkManager(
+        networkManager: ServiceContainer.networkManager,
+        urlProvider: ServiceContainer.urlProvider)
+
+    private let alertManager = ServiceContainer.alertManager
     private var usRate: Double = 0
 
     private func makeNetworkRequest() {
@@ -36,7 +39,7 @@ class CurrencyViewController: UIViewController {
                 case .success(let usRate):
                     self.usRate = usRate
                 case .failure(let error):
-                    self.presentAlert(with: error.message)
+                    self.presentAlert(msg: error.message)
                 }
             }
         }
@@ -44,12 +47,12 @@ class CurrencyViewController: UIViewController {
 
     private func updateLabel() {
         guard let amountToConvert = textField.text else {
-            presentAlert(with: "Please enter an amount to convert to dollars $ !")
+            presentAlert(msg: "Please enter an amount to convert to dollars $ !")
             return
         }
 
         guard let amountToConvertFloat = Double(amountToConvert) else {
-            presentAlert(with: "Please enter a number !")
+            presentAlert(msg: "Please enter a number !")
             return
         }
 
@@ -57,15 +60,7 @@ class CurrencyViewController: UIViewController {
         convertedAmountLabel.text = String(format: "%.2f", amount) + "$"
     }
 
-    private func presentAlert(with message: String) {
-        let alertViewController = UIAlertController(
-            title: "Error",
-            message: message,
-            preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "OK", style: .cancel)
-        alertViewController.addAction(action)
-        present(alertViewController,animated: true)
+    private func presentAlert(msg: String) {
+        alertManager.presentAlert(with: msg, presentingViewController: self)
     }
 }
-

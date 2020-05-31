@@ -8,14 +8,16 @@
 
 import Foundation
 
-enum Cities: String {
-    case newYorkCity
+enum City: String, CaseIterable {
+    case newYork
     case savignyLeTemple
+    case paris
 
     var name: String {
         switch self {
-        case .newYorkCity: return "New York City"
-        case .savignyLeTemple: return "Savigny-le-temple"
+        case .newYork: return "New York"
+        case .savignyLeTemple: return "Savigny-le-Temple"
+        case .paris: return "Paris"
         }
     }
 }

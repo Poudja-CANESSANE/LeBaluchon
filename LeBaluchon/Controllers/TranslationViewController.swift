@@ -22,7 +22,11 @@ class TranslationViewController: UIViewController {
         makeNetworkRequest()
     }
     
-    private let translationNetworkManager = TranslationNetworkManager()
+    private let translationNetworkManager = TranslationNetworkManager(
+        networkManager: ServiceContainer.networkManager,
+        urlProvider: ServiceContainer.urlProvider)
+
+    private let alertManager = ServiceContainer.alertManager
 
     private func getTargetLanguage() -> String {
         var targetLanguage: String
@@ -52,13 +56,6 @@ class TranslationViewController: UIViewController {
     }
 
     private func presentAlert(msg: String) {
-        let alertViewController = UIAlertController(
-            title: "Error",
-            message: msg,
-            preferredStyle: .alert)
-        
-        let action = UIAlertAction(title: "OK", style: .cancel)
-        alertViewController.addAction(action)
-        present(alertViewController,animated: true)
+        alertManager.presentAlert(with: msg, presentingViewController: self)
     }
 }

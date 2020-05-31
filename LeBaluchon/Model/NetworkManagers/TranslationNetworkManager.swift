@@ -9,26 +9,46 @@
 import Foundation
 
 class TranslationNetworkManager {
-    func translate(textToTranslate: String, targetLanguage: String, completion: @escaping (Result<Translation, NetworkError>) -> ()) {
-        guard let translationUrl = ServiceContainer.urlProviderImplementation.getUrl(service: .translation, stringToTranslate: textToTranslate, targetLanguage: targetLanguage, city: nil) else {
+    private let networkManager: NetworkManager
+    private let urlProvider: UrlProvider
+
+    init(networkManager: NetworkManager,
+         urlProvider: UrlProvider) {
+        self.networkManager = networkManager
+        self.urlProvider = urlProvider
+    }
+
+    func translate(
+        textToTranslate: String,
+        targetLanguage: String,
+        completion: @escaping (Result<Translation, NetworkError>) -> ()) {
+        guard let translationUrl = urlProvider.getTranslationUrl(stringToTranslate: textToTranslate, targetLanguage: targetLanguage) else {
             completion(.failure(.cannotGetUrl))
             return
         }
         print(translationUrl)
-        ServiceContainer.networkManager.fetchData(url: translationUrl) { (result: Result<TranslationResult, NetworkError>) in
+        networkManager.fetchData(url: translationUrl) { (result: Result<TranslationResult, NetworkError>) in
             switch result {
             case .failure(let networkError): completion(.failure(networkError))
             case .success(let response):
-                let translation = self.createTranslation(fromResponse: response)
-                completion(.success(translation))
+                do {
+                    let translation = try self.createTranslation(fromResponse: response)
+                    completion(.success(translation))
+                } catch {
+                    let error = error
+                    //Pas bon force casting
+                    completion(.failure(error as! NetworkError))
+                }
+                
             }
         }
     }
 
-    private func createTranslation(fromResponse response: TranslationResult) -> Translation {
+    private func createTranslation(fromResponse response: TranslationResult) throws -> Translation {
         print(response)
-        var translatedText = response.data.translations[0].translatedText
-        let detectedSourceLanguage = response.data.translations[0].detectedSourceLanguage
+        guard var translatedText = response.data.translations.first?.translatedText else { throw NetworkError.cannotCreateTranslation }
+
+        guard let detectedSourceLanguage = response.data.translations.first?.detectedSourceLanguage else { throw  NetworkError.cannotCreateTranslation}
 
         if translatedText.contains("&#39;") || translatedText.contains("&quot;"){
             translatedText = translatedText.replacingOccurrences(of: "&#39;", with: "‘")
@@ -38,5 +58,4 @@ class TranslationNetworkManager {
         let translation = Translation(translatedText: translatedText, detectedSourceLanguage: detectedSourceLanguage)
         return translation
     }
-    
 }

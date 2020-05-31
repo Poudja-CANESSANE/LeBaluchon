@@ -11,6 +11,6 @@ import Foundation
 protocol UrlProvider {
     func getLatestCurrencyUrl() -> URL?
     func getTranslationUrl(stringToTranslate: String, targetLanguage: String) -> URL?
-    func getWeatherUrl(city: Cities) -> URL?
-    func getUrl(service: Services, stringToTranslate: String?, targetLanguage: String?, city: Cities?) -> URL?
+    func getWeatherUrl(city: City) -> URL?
+    func getWeatherIconUrl(iconId: String) -> URL?
 }

@@ -16,6 +16,7 @@ enum NetworkError: Error {
     case badStatusCode
     case cannotDecodeResponse
     case cannotUnwrapUsRate
+    case cannotCreateTranslation
 
     var message: String {
         switch self {
@@ -26,6 +27,7 @@ enum NetworkError: Error {
         case .noData: return "There is no data !"
         case .noResponse: return "There is no response !"
         case .cannotUnwrapUsRate: return "The unwrapping of usRate is impossible !"
+        case .cannotCreateTranslation: return "The creation of a translation object is impossible !"
         }
     }
 }
