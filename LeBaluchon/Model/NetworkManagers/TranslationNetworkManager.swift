@@ -83,11 +83,15 @@ class TranslationNetworkManager {
 
     ///Returns the given String by replacing the HTML character references by the corresponding character
     private func replaceHTMLCharacterReferences(forString string: String) -> String {
-        var formattedString = ""
-        if string.contains("&#39;") || string.contains("&quot;") {
-            formattedString = string.replacingOccurrences(of: "&#39;", with: "‘")
-            formattedString = string.replacingOccurrences(of: "&quot;", with: "\"")
-        }
+        var formattedString = string
+        formattedString = replacePotential("&#39;", with: "‘", in: formattedString)
+        formattedString = replacePotential("&quot;", with: "\"", in: formattedString)
+        return formattedString
+    }
+
+    private func replacePotential(_ string1: String, with string2: String, in string3: String) -> String {
+        let formattedString = string3.contains(string1) ?
+            string3.replacingOccurrences(of: string1, with: string2) : string3
         return formattedString
     }
 }

@@ -78,8 +78,7 @@ class TranslationViewController: UIViewController {
     ///Updates the labels with the given Translation
     private func updateLabels(translation: Translation) {
         translatedTextView.text = translation.translatedText
-        detectedSourceLanguageLabel.text =
-        "Detected Source Language: \(translation.detectedSourceLanguage)"
+        detectedSourceLanguageLabel.text = "Detected Source Language: \(translation.detectedSourceLanguage)"
     }
 
     ///Presents an alert with the given message

@@ -59,7 +59,7 @@ class WeatherTableViewController: UIViewController {
                 case .failure(let networkError):
                     self.presentAlert(msg: networkError.message + #function)
                 case .success(let downloadedWeathers):
-                    self.updateUI(withDownloadedWeathers: downloadedWeathers, cities: cities)
+                    self.updateUI(withDownloadedWeathers: downloadedWeathers)
                 }
             }
         }
@@ -72,30 +72,18 @@ class WeatherTableViewController: UIViewController {
         return cities
     }
 
-    private func updateUI(withDownloadedWeathers downloadedWeathers: [City: WeatherObject], cities: [City]) {
-        self.populateIconsId(withWeathers: downloadedWeathers, cities: cities)
+    private func updateUI(withDownloadedWeathers downloadedWeathers: [City: WeatherObject]) {
+        self.populateIconsId(withWeathers: downloadedWeathers)
         self.assignValueToWeathers(fromDownloadedWeathers: downloadedWeathers)
         self.assignValueToIconsData(fromIconsId: self.iconsId)
     }
 
-    ///Populates the iconsId property with the parameter cities' elements as key
-    ///and the WeatherObject's iconId property as value
-    private func populateIconsId(withWeathers weathers: [City: WeatherObject], cities: [City]) {
-        guard let iconIds = getIconIds(fromWeathers: weathers) else {
-            presentAlert(msg: "Cannot unwrap iconIds !")
-            return
-        }
-
-        let icons = Dictionary(uniqueKeysWithValues: zip(cities, iconIds))
-        self.iconsId = icons
+    ///Populates the iconsId property with the weathers'key as key and the WeatherObject's iconId property as value
+    private func populateIconsId(withWeathers weathers: [City: WeatherObject]) {
+        var iconIds: [City: String] = [:]
+        weathers.forEach { iconIds[$0.key] = $0.value.iconId }
+        self.iconsId = iconIds
         print("\(self.iconsId) iconsId " + #function)
-    }
-
-    ///Returns an optionnal array containig the icon ID of each WeatherObject
-    private func getIconIds(fromWeathers weathers: [City: WeatherObject]) -> [String]? {
-        var iconIds: [String] = []
-        weathers.forEach { iconIds.append($0.value.iconId) }
-        return iconIds
     }
 
     ///Assigns a value to the weathers property from the given dictionary's values
