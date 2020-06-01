@@ -9,6 +9,10 @@
 import UIKit
 
 class WeatherTableViewCell: UITableViewCell {
+    // MARK: - INTERNAL
+
+    // MARK: IBOtlets
+
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var minTempLabel: UILabel!
@@ -16,6 +20,11 @@ class WeatherTableViewCell: UITableViewCell {
     @IBOutlet weak var temperatureLabel: UILabel!
     @IBOutlet weak var iconImageView: UIImageView!
 
+
+
+    // MARK: Methods
+
+    ///Updates the weather cell with the given WeatherObject and iconImage
     func updateWeatherCell(weatherObject: WeatherObject, iconImage: UIImage) {
         cityLabel.text = weatherObject.name
         descriptionLabel.text = weatherObject.description.capitalized

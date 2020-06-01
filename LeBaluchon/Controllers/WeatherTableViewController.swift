@@ -9,12 +9,26 @@
 import UIKit
 
 class WeatherTableViewController: UIViewController {
+    // MARK: - INTERNAL
+
+    // MARK: IBOutlets
+
     @IBOutlet weak var tableView: UITableView!
 
-    private var weathers: [WeatherObject]?
 
-    private var iconsId: [City: String] = [:]
-    private var iconsData: [City: Data] = [:]
+
+    // MARK: Methods
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateUIWithDownloadedWeathers()
+    }
+
+
+
+    // MARK: - PRIVATE
+
+    // MARK: Properties
 
     private let weatherNetworkManager = WeatherNetworkManager(
             networkManager: ServiceContainer.networkManager,
@@ -22,60 +36,75 @@ class WeatherTableViewController: UIViewController {
 
     private let alertManager = ServiceContainer.alertManager
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        updateUIWithDownloadedWeathers()
-//        updateImageWithWeatherIcon(icons: self.iconsId)
-    }
+    ///Contains the downloaded WeatherObject
+    private var weathers: [WeatherObject]?
 
+    ///Contains the icons ID corresponding a City
+    private var iconsId: [City: String] = [:]
+
+    ///Contains the icons Data corresponding to a City
+    private var iconsData: [City: Data] = [:]
+
+
+
+    // MARK: Methods
+
+    ///Updates the UI with the downloaded weathers
     private func updateUIWithDownloadedWeathers() {
-        weatherNetworkManager.getWeathers(forCities: [.newYork, .savignyLeTemple, .paris]) { result in
+        let cities = getCities()
+
+        weatherNetworkManager.getWeathers(forCities: cities) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let networkError):
                     self.presentAlert(msg: networkError.message + #function)
                 case .success(let downloadedWeathers):
-                    self.populateIconsId(withWeathers: downloadedWeathers)
-                    self.assignValueToWeathers(fromDownloadedWeathers: downloadedWeathers)
-                    self.assignValueToIconsData(fromIconsId: self.iconsId)
+                    self.updateUI(withDownloadedWeathers: downloadedWeathers, cities: cities)
                 }
             }
         }
     }
 
-    private func populateIconsId(withWeathers weathers: [City: WeatherObject]) {
-        guard let nyIconId = weathers[.newYork]?.iconId else {
-            self.presentAlert(msg: "Cannot unwrap nyIcon !")
+    ///Returns an array containing all City cases
+    private func getCities() -> [City] {
+        var cities: [City] = []
+        City.allCases.forEach { cities.append($0)}
+        return cities
+    }
+
+    private func updateUI(withDownloadedWeathers downloadedWeathers: [City: WeatherObject], cities: [City]) {
+        self.populateIconsId(withWeathers: downloadedWeathers, cities: cities)
+        self.assignValueToWeathers(fromDownloadedWeathers: downloadedWeathers)
+        self.assignValueToIconsData(fromIconsId: self.iconsId)
+    }
+
+    ///Populates the iconsId property with the parameter cities' elements as key
+    ///and the WeatherObject's iconId property as value
+    private func populateIconsId(withWeathers weathers: [City: WeatherObject], cities: [City]) {
+        guard let iconIds = getIconIds(fromWeathers: weathers) else {
+            presentAlert(msg: "Cannot unwrap iconIds !")
             return
         }
 
-        guard let sltIconId = weathers[.savignyLeTemple]?.iconId else {
-            self.presentAlert(msg: "Cannot unwrap sltIcon !")
-            return
-        }
-
-        guard let parisIconId = weathers[.paris]?.iconId else {
-            self.presentAlert(msg: "Cannot unwrap parisIcon !")
-            return
-        }
-
-        self.iconsId[.newYork] = nyIconId
-        self.iconsId[.savignyLeTemple] = sltIconId
-        self.iconsId[.paris] = parisIconId
+        let icons = Dictionary(uniqueKeysWithValues: zip(cities, iconIds))
+        self.iconsId = icons
         print("\(self.iconsId) iconsId " + #function)
     }
 
+    ///Returns an optionnal array containig the icon ID of each WeatherObject
+    private func getIconIds(fromWeathers weathers: [City: WeatherObject]) -> [String]? {
+        var iconIds: [String] = []
+        weathers.forEach { iconIds.append($0.value.iconId) }
+        return iconIds
+    }
+
+    ///Assigns a value to the weathers property from the given dictionary's values
     private func assignValueToWeathers(fromDownloadedWeathers weathers: [City: WeatherObject]) {
-        var weathersArray: [WeatherObject] = []
-
-        for (_, weather) in weathers {
-            let weather = weather
-            weathersArray.append(weather)
-        }
-
+        let weathersArray: [WeatherObject] = Array(weathers.values)
         self.weathers = weathersArray
     }
 
+    ///Assigns a value to iconsData property by downloading the icon Data from the given dictionary of City and icon ID
     private func assignValueToIconsData(fromIconsId iconsId: [City: String]) {
         weatherNetworkManager.getWeatherIconsData(forCitiesAndIconIds: iconsId) { result in
             DispatchQueue.main.async {
@@ -90,10 +119,12 @@ class WeatherTableViewController: UIViewController {
         }
     }
 
+    ///Presents an alert with the given message
     private func presentAlert(msg: String) {
         alertManager.presentAlert(with: msg, presentingViewController: self)
     }
 
+    ///Returns an optionnal UIImage corresponding to the icon Data of the given WeatherObject from the given dictionary
     private func getIconImage(fromIconsData iconsData: [City: Data], weatherObject: WeatherObject) -> UIImage? {
         let iconsStringData = getIconsStringData(fromIconsCityData: iconsData)
 
@@ -109,38 +140,39 @@ class WeatherTableViewController: UIViewController {
         return iconImage
     }
 
+    ///Returns the given dictionary with the city's name as key
     private func getIconsStringData(fromIconsCityData iconsData: [City: Data]) -> [String: Data] {
         var iconsStringData: [String: Data] = [:]
-
-        for (city, data) in iconsData {
-            iconsStringData[city.name] = data
-        }
+        iconsData.forEach { iconsStringData[$0.key.name] = $0.value }
         return iconsStringData
     }
 }
 
+
+
+// MARK: - EXTENSIONS
 extension WeatherTableViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return City.allCases.count
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
         guard let weatherCell = tableView.dequeueReusableCell(
             withIdentifier: "weatherCell",
-            for: indexPath) as? WeatherTableViewCell else {return WeatherTableViewCell()}
-
-//        print("\(indexPath.row) indexPath.row")
-//        print("\(String(describing: weathers?.count)) weathers?.count")
-//        print("\(String(describing: weathers?[0])) weathers?[0]")
-//        print("\(String(describing: weathers?[1])) weathers?[1]")
-//        print("\(String(describing: weathers?[2])) weathers?[2]")
+            for: indexPath) as? WeatherTableViewCell else {
+                return WeatherTableViewCell()
+        }
 
         guard let weatherObject = weathers?[indexPath.row] else {
-//            presentAlert(msg: "Cannot unwrap weatherObject !")
             return WeatherTableViewCell()
         }
 
-        guard let iconImage = getIconImage(fromIconsData: iconsData, weatherObject: weatherObject) else {
+        guard let iconImage = getIconImage(
+            fromIconsData: iconsData,
+            weatherObject: weatherObject) else {
             return WeatherTableViewCell()
         }
 

@@ -9,8 +9,9 @@
 import Foundation
 
 class CurrencyNetworkManager {
-    private let networkManager: NetworkManager
-    private let urlProvider: UrlProvider
+    // MARK: - INTERNAL
+
+    // MARK: Inits
 
     init(networkManager: NetworkManager,
          urlProvider: UrlProvider) {
@@ -18,6 +19,11 @@ class CurrencyNetworkManager {
         self.urlProvider = urlProvider
     }
 
+
+
+    // MARK: Methods
+
+    ///Returns by the completion parameter the downloaded us rate
     func getCurrency(completion: @escaping (Result<Double, NetworkError>) -> Void) {
         guard let latestCurrencyUrl = urlProvider.getLatestCurrencyUrl() else {
             completion(.failure(.cannotGetUrl))
@@ -38,4 +44,13 @@ class CurrencyNetworkManager {
             }
         }
     }
+
+
+
+    // MARK: - PRIVATE
+
+    // MARK: Properties
+
+    private let networkManager: NetworkManager
+    private let urlProvider: UrlProvider
 }

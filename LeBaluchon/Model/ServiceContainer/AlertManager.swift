@@ -10,6 +10,11 @@ import Foundation
 import UIKit
 
 class AlertManager {
+    // MARK: - INTERNAL
+
+    // MARK: Methods
+
+    ///Presents an alert with the given message and UIViewController
     func presentAlert(with message: String, presentingViewController: UIViewController) {
         let alertViewController = UIAlertController(
             title: "Error",

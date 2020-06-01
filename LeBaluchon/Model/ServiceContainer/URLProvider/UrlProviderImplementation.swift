@@ -9,6 +9,11 @@
 import Foundation
 
 class UrlProviderImplementation: UrlProvider {
+    // MARK: - INTERNAL
+
+    // MARK: Methods
+
+    ///Returns an optionnal URL to get the latest currency rates from the data.fixer.io API
     func getLatestCurrencyUrl() -> URL? {
         let service = Service.currency
         guard var urlComponents = URLComponents(string: service.baseUrl) else { return nil }
@@ -21,6 +26,8 @@ class UrlProviderImplementation: UrlProvider {
         return urlComponents.url
     }
 
+    ///Returns an optionnal URL to get the translation for the given String in the given target language
+    ///from the translation.googleapis.com API
     func getTranslationUrl(stringToTranslate: String, targetLanguage: String) -> URL? {
         let service = Service.translation
         guard var urlComponents = URLComponents(string: service.baseUrl) else { return nil }
@@ -36,6 +43,7 @@ class UrlProviderImplementation: UrlProvider {
         return urlComponents.url
     }
 
+    ///Returns an optionnal URL to get the weather for the given City from the api.openweathermap.org API
     func getWeatherUrl(city: City) -> URL? {
         let service = Service.weather
         guard var urlComponents = URLComponents(string: service.baseUrl) else { return nil }
@@ -49,6 +57,7 @@ class UrlProviderImplementation: UrlProvider {
         return urlComponents.url
     }
 
+    ///Returns an optionnal URL to get the icon Data for the given icon ID from the openweathermap.org API
     func getWeatherIconUrl(iconId: String) -> URL? {
         let service = Service.weatherIcon
         var weatherIconBaseUrl = service.baseUrl

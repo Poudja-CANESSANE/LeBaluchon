@@ -9,8 +9,9 @@
 import Foundation
 
 class TranslationNetworkManager {
-    private let networkManager: NetworkManager
-    private let urlProvider: UrlProvider
+    // MARK: - INTERNAL
+
+    // MARK: Inits
 
     init(networkManager: NetworkManager,
          urlProvider: UrlProvider) {
@@ -18,10 +19,16 @@ class TranslationNetworkManager {
         self.urlProvider = urlProvider
     }
 
+
+
+    // MARK: Methods
+
+    ///Returns by the completion parameter the downloaded translation in the given target language
     func translate(
         textToTranslate: String,
         targetLanguage: String,
         completion: @escaping (Result<Translation, NetworkError>) -> Void) {
+
         guard let translationUrl = urlProvider.getTranslationUrl(
             stringToTranslate: textToTranslate,
             targetLanguage: targetLanguage) else {
@@ -44,6 +51,20 @@ class TranslationNetworkManager {
         }
     }
 
+
+
+    // MARK: - PRIVATE
+
+    // MARK: Properties
+
+    private let networkManager: NetworkManager
+    private let urlProvider: UrlProvider
+
+
+
+    // MARK: Methods
+
+    ///Returns a Translation from the given TranslationResult without the HTML character references
     private func createTranslation(fromResponse response: TranslationResult) throws -> Translation {
         print(response)
         guard var translatedText = response.data.translations.first?.translatedText else {
@@ -54,12 +75,19 @@ class TranslationNetworkManager {
             throw  NetworkError.cannotCreateTranslation
         }
 
-        if translatedText.contains("&#39;") || translatedText.contains("&quot;") {
-            translatedText = translatedText.replacingOccurrences(of: "&#39;", with: "‘")
-            translatedText = translatedText.replacingOccurrences(of: "&quot;", with: "\"")
-        }
+        translatedText = replaceHTMLCharacterReferences(forString: translatedText)
 
         let translation = Translation(translatedText: translatedText, detectedSourceLanguage: detectedSourceLanguage)
         return translation
+    }
+
+    ///Returns the given String by replacing the HTML character references by the corresponding character
+    private func replaceHTMLCharacterReferences(forString string: String) -> String {
+        var formattedString = ""
+        if string.contains("&#39;") || string.contains("&quot;") {
+            formattedString = string.replacingOccurrences(of: "&#39;", with: "‘")
+            formattedString = string.replacingOccurrences(of: "&quot;", with: "\"")
+        }
+        return formattedString
     }
 }

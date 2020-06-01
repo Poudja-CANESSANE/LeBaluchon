@@ -9,8 +9,9 @@
 import Foundation
 
 class WeatherNetworkManager {
-    private let networkManager: NetworkManager
-    private let urlProvider: UrlProvider
+    // MARK: - INTERNAL
+
+    // MARK: Inits
 
     init(networkManager: NetworkManager,
          urlProvider: UrlProvider) {
@@ -18,9 +19,16 @@ class WeatherNetworkManager {
         self.urlProvider = urlProvider
     }
 
+
+
+    // MARK: Methods
+
+    ///Returns by the completion parameter the WeatherObject corresponding to the given cities
+    ///from the downloaded WeatherResult
     func getWeathers(
         forCities cities: [City],
         completion: @escaping (Result<[City: WeatherObject], NetworkError>) -> Void) {
+
         let urls = getUrlsForWeathers(fromCities: cities)
         getWeatherObjects(fromUrls: urls) { result in
             switch result {
@@ -30,6 +38,7 @@ class WeatherNetworkManager {
         }
     }
 
+    ///Returns by the completion parameter the downloaded icon Data from the given dictionary of City and icon IDs
     func getWeatherIconsData(
         forCitiesAndIconIds citiesAndIconIds: [City: String],
         completion: @escaping (Result<[City: Data], NetworkError>) -> Void) {
@@ -42,6 +51,41 @@ class WeatherNetworkManager {
         }
     }
 
+    ///Returns by the completion parameter the downloaded icon Data from the given icon ID
+    func getWeatherIconDataForWeatherViewController(
+        iconId: String,
+        completion: @escaping (Result<Data, NetworkError>) -> Void) {
+
+        guard let weatherIconUrl = urlProvider.getWeatherIconUrl(iconId: iconId) else {
+            completion(.failure(.cannotGetUrl))
+            return
+        }
+
+        networkManager.fetchData(url: weatherIconUrl) { result in
+            switch result {
+            case .failure(let networkError):
+                print(networkError.message + #function)
+                completion(.failure(networkError))
+            case .success(let data):
+                completion(.success(data))
+            }
+        }
+    }
+
+
+
+    // MARK: - PRIVATE
+
+    // MARK: Properties
+
+    private let networkManager: NetworkManager
+    private let urlProvider: UrlProvider
+
+
+
+    // MARK: Methods
+
+    ///Returns the URL corresponding to each given city in a dictionary of City and URL
     private func getUrlsForWeathers(fromCities cities: [City]) -> [City: URL] {
         var urls: [City: URL] = [:]
 
@@ -54,9 +98,12 @@ class WeatherNetworkManager {
         return urls
     }
 
+    ///Returns by the completion parameter the WeatherObject from the given URL corresponding to the given city
+    ///in a dictionary of City and WeatherObject
     private func getWeatherObjects(
         fromUrls urls: [City: URL],
         completion: @escaping (Result<[City: WeatherObject], NetworkError>) -> Void) {
+
         var weatherObjects: [City: WeatherObject] = [:]
 
         for (city, url) in urls {
@@ -76,7 +123,9 @@ class WeatherNetworkManager {
         }
     }
 
+    ///Returns the URL corresponding to the given icon ID for each given city in a dictionary of City and URL
     private func getUrlsForWeatherIconsData(fromCitiesAndIconIds citiesAndIconIds: [City: String]) -> [City: URL] {
+
         var urls: [City: URL] = [:]
 
         for (city, iconId) in citiesAndIconIds {
@@ -90,13 +139,16 @@ class WeatherNetworkManager {
         return urls
     }
 
+    ///Returns by the completion parameter the downloaded icon Data corresponding to the given URL for each given city
+    ///in a dictionary of City and Data
     private func getIconsData(
         fromUrls urls: [City: URL],
         completion: @escaping (Result<[City: Data], NetworkError>) -> Void) {
+
         var iconsData: [City: Data] = [:]
 
         for (city, url) in urls {
-            networkManager.fetchData(url: url) { (result) in
+            networkManager.fetchData(url: url) { result in
                 switch result {
                 case .failure(let networkError):
                     print(networkError.message + #function)
@@ -112,25 +164,7 @@ class WeatherNetworkManager {
         }
     }
 
-    func getWeatherIconDataForWeatherViewController(
-        iconId: String,
-        completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        guard let weatherIconUrl = urlProvider.getWeatherIconUrl(iconId: iconId) else {
-            completion(.failure(.cannotGetUrl))
-            return
-        }
-
-        networkManager.fetchData(url: weatherIconUrl) { (result) in
-            switch result {
-            case .failure(let networkError):
-                print(networkError.message + #function)
-                completion(.failure(networkError))
-            case .success(let data):
-                completion(.success(data))
-            }
-        }
-    }
-
+    ///Returns a WeatherObject from the given WeatherResult
     private func createWeatherObject(fromResponse response: WeatherResult) -> WeatherObject {
         let temperature = Int(response.main.temp)
         let temperatureMin = Int(response.main.tempMin)
@@ -152,48 +186,48 @@ class WeatherNetworkManager {
         return weather
     }
 
-        private func getUrls(
-            fromCities cities: [City]? = nil,
-            fromCitiesAndIconIds citiesAndIconIds: [City: String]? = nil) -> [City: URL] {
-            var urls: [City: URL] = [:]
+    private func getUrls(
+        fromCities cities: [City]? = nil,
+        fromCitiesAndIconIds citiesAndIconIds: [City: String]? = nil) -> [City: URL] {
+        var urls: [City: URL] = [:]
 
-            if let cities = cities {
-                for city in cities {
-                    if let weatherUrl = urlProvider.getWeatherUrl(city: city) {
-                        urls[city] = weatherUrl
-                    }
+        if let cities = cities {
+            for city in cities {
+                if let weatherUrl = urlProvider.getWeatherUrl(city: city) {
+                    urls[city] = weatherUrl
                 }
             }
-
-            if let citiesAndIconIds = citiesAndIconIds {
-                for (city, iconId) in citiesAndIconIds {
-                    if let weatherIconUrl = urlProvider.getWeatherIconUrl(iconId: iconId) {
-                        urls[city] = weatherIconUrl
-
-                    }
-                }
-            }
-
-    //        if sequence.self == [City].self {
-    //            for city in sequence.enumerated() {
-    //                if let weatherUrl = urlProviderImplementation.getWeatherIconUrl(icon: iconId) {
-    //                    urls[city] = weatherUrl
-    //
-    //                }
-    //            }
-    //        }
-    //        if sequence.self == [City: String].self {
-    //            var city: City
-    //            var iconId: String
-    //            for (city, iconId) in sequence.enumerated() {
-    //                if let weatherIconUrl = urlProviderImplementation.getWeatherIconUrl(icon: iconId as! String) {
-    //                    urls[city] = weatherIconUrl
-    //
-    //                }
-    //            }
-    //        }
-
-            print("\(urls) urls " + #function)
-            return urls
         }
+
+        if let citiesAndIconIds = citiesAndIconIds {
+            for (city, iconId) in citiesAndIconIds {
+                if let weatherIconUrl = urlProvider.getWeatherIconUrl(iconId: iconId) {
+                    urls[city] = weatherIconUrl
+
+                }
+            }
+        }
+
+        print("\(urls) urls " + #function)
+        return urls
+
+//        if sequence.self == [City].self {
+//            for city in sequence.enumerated() {
+//                if let weatherUrl = urlProviderImplementation.getWeatherIconUrl(icon: iconId) {
+//                    urls[city] = weatherUrl
+//
+//                }
+//            }
+//        }
+//        if sequence.self == [City: String].self {
+//            var city: City
+//            var iconId: String
+//            for (city, iconId) in sequence.enumerated() {
+//                if let weatherIconUrl = urlProviderImplementation.getWeatherIconUrl(icon: iconId as! String) {
+//                    urls[city] = weatherIconUrl
+//
+//                }
+//            }
+//        }
+    }
 }

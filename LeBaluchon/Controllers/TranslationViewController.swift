@@ -9,10 +9,18 @@
 import UIKit
 
 class TranslationViewController: UIViewController {
+    // MARK: - INTERNAL
+
+    // MARK: IBOutlets
+
     @IBOutlet weak var toTranslateTextView: UITextView!
     @IBOutlet weak var translatedTextView: UITextView!
     @IBOutlet weak var detectedSourceLanguageLabel: UILabel!
     @IBOutlet weak var targetLanguageSegmentedControl: UISegmentedControl!
+
+
+
+    // MARK: IBActions
 
     @IBAction func dismissKeyboard(_ sender: UITapGestureRecognizer) {
         toTranslateTextView.resignFirstResponder()
@@ -22,12 +30,39 @@ class TranslationViewController: UIViewController {
         makeNetworkRequest()
     }
 
+
+
+    // MARK: - PRIVATE
+
+    // MARK: Properties
+
     private let translationNetworkManager = TranslationNetworkManager(
         networkManager: ServiceContainer.networkManager,
         urlProvider: ServiceContainer.urlProvider)
 
     private let alertManager = ServiceContainer.alertManager
 
+
+
+    // MARK: Methods
+
+    ///Gets the downloaded translation 
+    private func makeNetworkRequest() {
+        let targetLanguage = getTargetLanguage()
+
+        translationNetworkManager.translate(
+        textToTranslate: toTranslateTextView.text,
+        targetLanguage: targetLanguage) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .failure(let networkError): self.presentAlert(msg: networkError.message)
+                case .success(let translation): self.updateLabels(translation: translation)
+                }
+            }
+        }
+    }
+
+    ///Returns the chosen target language
     private func getTargetLanguage() -> String {
         var targetLanguage: String
         switch targetLanguageSegmentedControl.selectedSegmentIndex {
@@ -40,25 +75,14 @@ class TranslationViewController: UIViewController {
         return targetLanguage
     }
 
-    private func makeNetworkRequest() {
-        let targetLanguage = getTargetLanguage()
-
-        translationNetworkManager.translate(
-        textToTranslate: toTranslateTextView.text,
-        targetLanguage: targetLanguage) { (result) in
-            DispatchQueue.main.async {
-                switch result {
-                case .failure(let networkError):
-                    self.presentAlert(msg: networkError.message)
-                case .success(let translation):
-                    self.translatedTextView.text = translation.translatedText
-                    self.detectedSourceLanguageLabel.text =
-                    "Detected Source Language: \(translation.detectedSourceLanguage)"
-                }
-            }
-        }
+    ///Updates the labels with the given Translation
+    private func updateLabels(translation: Translation) {
+        translatedTextView.text = translation.translatedText
+        detectedSourceLanguageLabel.text =
+        "Detected Source Language: \(translation.detectedSourceLanguage)"
     }
 
+    ///Presents an alert with the given message
     private func presentAlert(msg: String) {
         alertManager.presentAlert(with: msg, presentingViewController: self)
     }

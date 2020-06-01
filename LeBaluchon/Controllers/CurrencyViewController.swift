@@ -9,13 +9,16 @@
 import UIKit
 
 class CurrencyViewController: UIViewController {
+    // MARK: - INTERNAL
+
+    // MARK: IBOutlets
+
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var convertedAmountLabel: UILabel!
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        makeNetworkRequest()
-    }
+
+
+    // MARK: IBActions
 
     @IBAction func didTapConvertButton(_ sender: UIButton) {
         updateLabel()
@@ -25,6 +28,21 @@ class CurrencyViewController: UIViewController {
         textField.resignFirstResponder()
     }
 
+
+
+    // MARK: Methods
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        makeNetworkRequest()
+    }
+
+
+
+    // MARK: - PRIVATE
+
+    // MARK: Properties
+
     private let currencyNetworkManager = CurrencyNetworkManager(
         networkManager: ServiceContainer.networkManager,
         urlProvider: ServiceContainer.urlProvider)
@@ -32,8 +50,13 @@ class CurrencyViewController: UIViewController {
     private let alertManager = ServiceContainer.alertManager
     private var usRate: Double = 0
 
+
+
+    // MARK: Methods
+
+    ///Gets the downloaded us rate
     private func makeNetworkRequest() {
-        currencyNetworkManager.getCurrency { (result) in
+        currencyNetworkManager.getCurrency { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let usRate):
@@ -45,21 +68,23 @@ class CurrencyViewController: UIViewController {
         }
     }
 
+    ///Updates the convertedAmountLabel with converted amount
     private func updateLabel() {
-        guard let amountToConvert = textField.text else {
+        guard let amountToConvertString = textField.text else {
             presentAlert(msg: "Please enter an amount to convert to dollars $ !")
             return
         }
 
-        guard let amountToConvertFloat = Double(amountToConvert) else {
+        guard let amountToConvertDouble = Double(amountToConvertString) else {
             presentAlert(msg: "Please enter a number !")
             return
         }
 
-        let amount = (amountToConvertFloat * usRate)
+        let amount = (amountToConvertDouble * usRate)
         convertedAmountLabel.text = String(format: "%.2f", amount) + "$"
     }
 
+    ///Presents an alert with the given message
     private func presentAlert(msg: String) {
         alertManager.presentAlert(with: msg, presentingViewController: self)
     }

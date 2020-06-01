@@ -9,6 +9,11 @@
 import Foundation
 
 class NetworkManagerImplementation: NetworkManager {
+    // MARK: - INTERNAL
+
+    // MARK: Methods
+
+    ///Returns by the completion parameter the downloaded Data of generic type from the given URL
     func fetchData<T: Codable>(url: URL, completion: @escaping (Result<T, NetworkError>) -> Void) {
         URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
             guard error == nil else {
@@ -40,6 +45,7 @@ class NetworkManagerImplementation: NetworkManager {
         }).resume()
     }
 
+    ///Returns by the completion parameter the downloded Data from the given URL
     func fetchData(url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) {
         URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
             guard error == nil else {
