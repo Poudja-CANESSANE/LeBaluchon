@@ -29,14 +29,14 @@
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="mkP-tE-NT1" userLabel="New York City Stack View">
                                                     <rect key="frame" x="23" y="19" width="274" height="142"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New York City" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cgZ-ac-LRB">
-                                                            <rect key="frame" x="0.0" y="0.0" width="163.5" height="30"/>
-                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="25"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New York City" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cgZ-ac-LRB">
+                                                            <rect key="frame" x="0.0" y="0.0" width="170" height="30"/>
+                                                            <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="25"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="64" translatesAutoresizingMaskIntoConstraints="NO" id="6cU-hL-fEl" userLabel="Nyc Weather Stack View">
-                                                            <rect key="frame" x="0.0" y="45" width="235.5" height="97"/>
+                                                            <rect key="frame" x="0.0" y="45" width="233" height="97"/>
                                                             <subviews>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="DyF-cu-8S4" userLabel="Nyc Descriptions Stack View">
                                                                     <rect key="frame" x="0.0" y="8" width="55" height="81"/>
@@ -54,7 +54,7 @@
                                                                     </subviews>
                                                                 </stackView>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="3fd-9e-49y" userLabel="Nyc Temperatures Stack View">
-                                                                    <rect key="frame" x="119" y="29.5" width="116.5" height="38.5"/>
+                                                                    <rect key="frame" x="119" y="29.5" width="114" height="38.5"/>
                                                                     <subviews>
                                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="CfA-ia-EUq" userLabel="Nyc Max Min Temp Stack View">
                                                                             <rect key="frame" x="0.0" y="7" width="25" height="24"/>
@@ -75,8 +75,8 @@
                                                                             </subviews>
                                                                         </stackView>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20°C" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="25" translatesAutoresizingMaskIntoConstraints="NO" id="stR-8g-WCU">
-                                                                            <rect key="frame" x="35" y="0.0" width="81.5" height="38.5"/>
-                                                                            <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="32"/>
+                                                                            <rect key="frame" x="35" y="0.0" width="79" height="38.5"/>
+                                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="32"/>
                                                                             <nil key="textColor"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
