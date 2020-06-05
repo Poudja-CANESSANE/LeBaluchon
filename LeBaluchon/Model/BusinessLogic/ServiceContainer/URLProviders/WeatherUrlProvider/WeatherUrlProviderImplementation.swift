@@ -27,7 +27,6 @@ class WeatherUrlProviderImplementation: WeatherUrlProvider {
         var weatherIconBaseUrl = service.baseUrl
         weatherIconBaseUrl.append("\(iconId)@2x.png")
         let weatherIconUrl = URL(string: weatherIconBaseUrl)
-        print("\(String(describing: weatherIconUrl)) weatherIconUrl " + #function)
         return weatherIconUrl
     }
 }

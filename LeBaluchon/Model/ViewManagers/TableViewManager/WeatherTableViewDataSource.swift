@@ -72,7 +72,6 @@ class WeatherTableViewDataSource: NSObject, UITableViewDataSource {
         var iconIds: [City: String] = [:]
         weathers.forEach { iconIds[$0.key] = $0.value.iconId }
         self.iconsId = iconIds
-        print("\(self.iconsId) iconsId " + #function)
     }
 
     ///Assigns a value to the weathers property from the given dictionary's values
@@ -94,8 +93,6 @@ class WeatherTableViewDataSource: NSObject, UITableViewDataSource {
         guard let iconImage = UIImage(data: data) else {
             return nil
         }
-        print(weatherObject)
-        print("\(iconImage) iconImage")
         return iconImage
     }
 

@@ -14,7 +14,6 @@ class FakeResponseData {
 
     static var currencyCorrectData: Data {
         let bundle = Bundle(for: FakeResponseData.self)
-        print(bundle)
 
         guard let url = bundle.url(forResource: "Currency", withExtension: "json") else {
             fatalError("No such resource: Currency.json")

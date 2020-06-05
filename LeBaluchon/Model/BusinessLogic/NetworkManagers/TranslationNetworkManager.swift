@@ -35,7 +35,7 @@ class TranslationNetworkManager {
             completion(.failure(.cannotGetUrl))
             return
         }
-        print(translationUrl)
+
         networkService.fetchData(url: translationUrl) { (result: Result<TranslationResult, NetworkError>) in
             switch result {
             case .failure(let networkError): completion(.failure(networkError))
@@ -66,7 +66,6 @@ class TranslationNetworkManager {
 
     ///Returns a Translation from the given TranslationResult without the HTML character references
     private func createTranslation(fromResponse response: TranslationResult) throws -> Translation {
-        print(response)
         guard var translatedText = response.data.translations.first?.translatedText else {
             throw NetworkError.cannotCreateTranslation
         }

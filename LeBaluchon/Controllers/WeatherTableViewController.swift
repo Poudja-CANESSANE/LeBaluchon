@@ -100,7 +100,6 @@ class WeatherTableViewController: UIViewController {
     ///Assigns a value to weatherTableViewDataSource's iconsData property
     ///with the downloaded  icon Data and ends the refreshing of the refresher property
     private func assignValueToIconsDataAndEndRefreshing(iconsData: ([City: Data])) {
-        print("\(iconsData) iconsData " + #function)
         self.refresher.endRefreshing()
         self.weatherTableViewDataSource.iconsData = iconsData
         self.tableView.reloadData()

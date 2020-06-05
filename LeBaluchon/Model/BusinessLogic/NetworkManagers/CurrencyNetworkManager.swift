@@ -29,7 +29,6 @@ class CurrencyNetworkManager {
             completion(.failure(.cannotGetUrl))
             return
         }
-        print(latestCurrencyUrl)
 
         networkService.fetchData(url: latestCurrencyUrl) { (result: Result<CurrencyLatestResult, NetworkError>) in
             switch result {

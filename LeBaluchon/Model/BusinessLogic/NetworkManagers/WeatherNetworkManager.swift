@@ -74,7 +74,6 @@ class WeatherNetworkManager {
                 urls[city] = weatherUrl
             }
         }
-        print("\(urls) urls " + #function)
         return urls
     }
 
@@ -90,7 +89,6 @@ class WeatherNetworkManager {
             networkService.fetchData(url: url) {  (result: Result<WeatherResult, NetworkError>) in
                 switch result {
                 case .failure(let networkError):
-                    print(networkError.message + #function)
                     completion(.failure(networkError))
                 case .success(let cityResponse):
                     do {
@@ -119,8 +117,6 @@ class WeatherNetworkManager {
 
             }
         }
-
-        print("\(urls) urls " + #function)
         return urls
     }
 
@@ -136,7 +132,6 @@ class WeatherNetworkManager {
             networkService.fetchData(url: url) { result in
                 switch result {
                 case .failure(let networkError):
-                    print(networkError.message + #function)
                     completion(.failure(networkError))
                 case .success(let data):
                     iconsData[city] = data
