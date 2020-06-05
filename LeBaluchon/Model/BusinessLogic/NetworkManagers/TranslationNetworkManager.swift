@@ -13,10 +13,10 @@ class TranslationNetworkManager {
 
     // MARK: Inits
 
-    init(networkManager: NetworkManager,
-         urlProvider: UrlProvider) {
-        self.networkManager = networkManager
-        self.urlProvider = urlProvider
+    init(networkService: NetworkService,
+         translationUrlProvider: TranslationUrlProvider) {
+        self.networkService = networkService
+        self.translationUrlProvider = translationUrlProvider
     }
 
 
@@ -24,19 +24,19 @@ class TranslationNetworkManager {
     // MARK: Methods
 
     ///Returns by the completion parameter the downloaded translation in the given target language
-    func translate(
-        textToTranslate: String,
-        targetLanguage: String,
+    func getTranslation(
+        forTextToTranslate textToTranslate: String,
+        inTargetLanguage targetLanguage: String,
         completion: @escaping (Result<Translation, NetworkError>) -> Void) {
 
-        guard let translationUrl = urlProvider.getTranslationUrl(
+        guard let translationUrl = translationUrlProvider.getTranslationUrl(
             stringToTranslate: textToTranslate,
             targetLanguage: targetLanguage) else {
             completion(.failure(.cannotGetUrl))
             return
         }
         print(translationUrl)
-        networkManager.fetchData(url: translationUrl) { (result: Result<TranslationResult, NetworkError>) in
+        networkService.fetchData(url: translationUrl) { (result: Result<TranslationResult, NetworkError>) in
             switch result {
             case .failure(let networkError): completion(.failure(networkError))
             case .success(let response):
@@ -57,8 +57,8 @@ class TranslationNetworkManager {
 
     // MARK: Properties
 
-    private let networkManager: NetworkManager
-    private let urlProvider: UrlProvider
+    private let networkService: NetworkService
+    private let translationUrlProvider: TranslationUrlProvider
 
 
 
@@ -89,9 +89,13 @@ class TranslationNetworkManager {
         return formattedString
     }
 
-    private func replacePotential(_ string1: String, with string2: String, in string3: String) -> String {
-        let formattedString = string3.contains(string1) ?
-            string3.replacingOccurrences(of: string1, with: string2) : string3
+    private func replacePotential(
+        _ stringToReplace: String,
+        with replacementString: String,
+        in originalString: String) -> String {
+
+        let formattedString = originalString.contains(stringToReplace) ?
+            originalString.replacingOccurrences(of: stringToReplace, with: replacementString) : originalString
         return formattedString
     }
 }

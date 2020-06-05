@@ -14,20 +14,22 @@ enum NetworkError: Error {
     case getError
     case noResponse
     case badStatusCode
-    case cannotDecodeResponse
+    case cannotDecodeData
     case cannotUnwrapUsRate
     case cannotCreateTranslation
+    case cannotCreateWeatherObject
 
     var message: String {
         switch self {
         case .cannotGetUrl: return "The URL is wrong !"
         case .badStatusCode: return "The response status code is not 200 !"
-        case .cannotDecodeResponse: return "The response decoding is impossible !"
+        case .cannotDecodeData: return "The data decoding is impossible !"
         case .getError: return "There is an error while getting the response !"
         case .noData: return "There is no data !"
         case .noResponse: return "There is no response !"
         case .cannotUnwrapUsRate: return "The unwrapping of usRate is impossible !"
-        case .cannotCreateTranslation: return "The creation of a translation object is impossible !"
+        case .cannotCreateTranslation: return "The creation of a Translation object is impossible !"
+        case .cannotCreateWeatherObject: return "The creation of a WeatherObject is impossible !"
         }
     }
 }

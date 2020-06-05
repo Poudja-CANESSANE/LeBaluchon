@@ -32,8 +32,14 @@ class CurrencyViewController: UIViewController {
 
     // MARK: Methods
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        activityIndicatorViewManager.setupActivityIndicator(on: view)
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        activityIndicatorViewManager.removeActivityIndicator()
         makeNetworkRequest()
     }
 
@@ -44,10 +50,11 @@ class CurrencyViewController: UIViewController {
     // MARK: Properties
 
     private let currencyNetworkManager = CurrencyNetworkManager(
-        networkManager: ServiceContainer.networkManager,
-        urlProvider: ServiceContainer.urlProvider)
+        networkService: ServiceContainer.networkService,
+        currencyUrlProvider: ServiceContainer.currencyUrlProvider)
 
     private let alertManager = ServiceContainer.alertManager
+    private let activityIndicatorViewManager = ActivityIndicatorViewManager()
     private var usRate: Double = 0
 
 
@@ -56,7 +63,8 @@ class CurrencyViewController: UIViewController {
 
     ///Gets the downloaded us rate
     private func makeNetworkRequest() {
-        currencyNetworkManager.getCurrency { result in
+        activityIndicatorViewManager.setupActivityIndicator(on: view)
+        currencyNetworkManager.getLatestUSDCurrencyRate { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let usRate):
@@ -66,6 +74,7 @@ class CurrencyViewController: UIViewController {
                 }
             }
         }
+        self.activityIndicatorViewManager.removeActivityIndicator()
     }
 
     ///Updates the convertedAmountLabel with converted amount
@@ -81,11 +90,24 @@ class CurrencyViewController: UIViewController {
         }
 
         let amount = (amountToConvertDouble * usRate)
-        convertedAmountLabel.text = String(format: "%.2f", amount) + "$"
+        let formattedAmount = formatConvertedAmount(amount: amount)
+        convertedAmountLabel.text = formattedAmount + "$"
+    }
+
+    ///Returns the given amount with spaces and comma to make it more readable
+    private func formatConvertedAmount(amount: Double) -> String {
+        let currencyFormatter = NumberFormatter()
+        currencyFormatter.usesGroupingSeparator = true
+        currencyFormatter.numberStyle = .currency
+        currencyFormatter.maximumFractionDigits = 2
+        currencyFormatter.locale = Locale(identifier: "fr_FR")
+        guard var formattedAmount = currencyFormatter.string(from: NSNumber(value: amount)) else { return "" }
+        formattedAmount = String(formattedAmount.dropLast())
+        return formattedAmount
     }
 
     ///Presents an alert with the given message
     private func presentAlert(msg: String) {
-        alertManager.presentAlert(with: msg, presentingViewController: self)
+        alertManager.presentErrorAlert(with: msg, presentingViewController: self)
     }
 }

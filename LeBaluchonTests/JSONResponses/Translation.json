@@ -1,0 +1,10 @@
+{
+  "data": {
+    "translations": [
+      {
+        "translatedText": "Jean says: &quot;I like apples and pasta!&quot;.",
+        "detectedSourceLanguage": "fr"
+      }
+    ]
+  }
+}

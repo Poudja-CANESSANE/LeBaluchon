@@ -37,10 +37,11 @@ class TranslationViewController: UIViewController {
     // MARK: Properties
 
     private let translationNetworkManager = TranslationNetworkManager(
-        networkManager: ServiceContainer.networkManager,
-        urlProvider: ServiceContainer.urlProvider)
+        networkService: ServiceContainer.networkService,
+        translationUrlProvider: ServiceContainer.translationUrlProvider)
 
     private let alertManager = ServiceContainer.alertManager
+    private let activityIndicatorViewManager = ActivityIndicatorViewManager()
 
 
 
@@ -48,15 +49,20 @@ class TranslationViewController: UIViewController {
 
     ///Gets the downloaded translation 
     private func makeNetworkRequest() {
+        activityIndicatorViewManager.setupActivityIndicator(on: view)
         let targetLanguage = getTargetLanguage()
 
-        translationNetworkManager.translate(
-        textToTranslate: toTranslateTextView.text,
-        targetLanguage: targetLanguage) { result in
+        translationNetworkManager.getTranslation(
+        forTextToTranslate: toTranslateTextView.text,
+        inTargetLanguage: targetLanguage) { result in
             DispatchQueue.main.async {
                 switch result {
-                case .failure(let networkError): self.presentAlert(msg: networkError.message)
-                case .success(let translation): self.updateLabels(translation: translation)
+                case .failure(let networkError):
+                    self.activityIndicatorViewManager.removeActivityIndicator()
+                    self.presentAlert(msg: networkError.message)
+                case .success(let translation):
+                    self.activityIndicatorViewManager.removeActivityIndicator()
+                    self.updateLabels(translation: translation)
                 }
             }
         }
@@ -83,6 +89,6 @@ class TranslationViewController: UIViewController {
 
     ///Presents an alert with the given message
     private func presentAlert(msg: String) {
-        alertManager.presentAlert(with: msg, presentingViewController: self)
+        alertManager.presentErrorAlert(with: msg, presentingViewController: self)
     }
 }

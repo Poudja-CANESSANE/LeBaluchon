@@ -6,7 +6,6 @@
 //  Copyright © 2020 Canessane Poudja. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class AlertManager {
@@ -15,7 +14,7 @@ class AlertManager {
     // MARK: Methods
 
     ///Presents an alert with the given message and UIViewController
-    func presentAlert(with message: String, presentingViewController: UIViewController) {
+    func presentErrorAlert(with message: String, presentingViewController: UIViewController) {
         let alertViewController = UIAlertController(
             title: "Error",
             message: message,

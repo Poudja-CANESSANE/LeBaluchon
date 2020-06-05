@@ -8,14 +8,22 @@
 
 import Foundation
 
-class NetworkManagerImplementation: NetworkManager {
+class NetworkServiceImplementation: NetworkService {
     // MARK: - INTERNAL
+
+    // MARK: Inits
+
+    init(session: URLSession = URLSession.shared) {
+        self.session = session
+    }
+
+
 
     // MARK: Methods
 
     ///Returns by the completion parameter the downloaded Data of generic type from the given URL
     func fetchData<T: Codable>(url: URL, completion: @escaping (Result<T, NetworkError>) -> Void) {
-        URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+        session.dataTask(with: url, completionHandler: { (data, response, error) in
             guard error == nil else {
                 completion(.failure(.getError))
                 return
@@ -36,7 +44,7 @@ class NetworkManagerImplementation: NetworkManager {
             }
 
             guard let responseJSON = try? JSONDecoder().decode(T.self, from: data) else {
-                completion(.failure(.cannotDecodeResponse))
+                completion(.failure(.cannotDecodeData))
                 return
             }
 
@@ -47,7 +55,7 @@ class NetworkManagerImplementation: NetworkManager {
 
     ///Returns by the completion parameter the downloded Data from the given URL
     func fetchData(url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        URLSession.shared.dataTask(with: url, completionHandler: { (data, response, error) in
+        session.dataTask(with: url, completionHandler: { (data, response, error) in
             guard error == nil else {
                 completion(.failure(.getError))
                 return
@@ -71,4 +79,11 @@ class NetworkManagerImplementation: NetworkManager {
         }).resume()
     }
 
+
+
+    // MARK: - PRIVATE
+
+    // MARK: Properties
+
+    private var session: URLSession
 }

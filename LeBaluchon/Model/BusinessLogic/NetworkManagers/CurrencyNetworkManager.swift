@@ -13,10 +13,10 @@ class CurrencyNetworkManager {
 
     // MARK: Inits
 
-    init(networkManager: NetworkManager,
-         urlProvider: UrlProvider) {
-        self.networkManager = networkManager
-        self.urlProvider = urlProvider
+    init(networkService: NetworkService,
+         currencyUrlProvider: CurrencyUrlProvider) {
+        self.networkService = networkService
+        self.currencyUrlProvider = currencyUrlProvider
     }
 
 
@@ -24,14 +24,14 @@ class CurrencyNetworkManager {
     // MARK: Methods
 
     ///Returns by the completion parameter the downloaded us rate
-    func getCurrency(completion: @escaping (Result<Double, NetworkError>) -> Void) {
-        guard let latestCurrencyUrl = urlProvider.getLatestCurrencyUrl() else {
+    func getLatestUSDCurrencyRate(completion: @escaping (Result<Double, NetworkError>) -> Void) {
+        guard let latestCurrencyUrl = currencyUrlProvider.getLatestCurrencyUrl() else {
             completion(.failure(.cannotGetUrl))
             return
         }
         print(latestCurrencyUrl)
 
-        networkManager.fetchData(url: latestCurrencyUrl) { (result: Result<CurrencyLatestResult, NetworkError>) in
+        networkService.fetchData(url: latestCurrencyUrl) { (result: Result<CurrencyLatestResult, NetworkError>) in
             switch result {
             case .failure(let networkError): completion(.failure(networkError))
             case .success(let response):
@@ -51,6 +51,6 @@ class CurrencyNetworkManager {
 
     // MARK: Properties
 
-    private let networkManager: NetworkManager
-    private let urlProvider: UrlProvider
+    private let networkService: NetworkService
+    private let currencyUrlProvider: CurrencyUrlProvider
 }
