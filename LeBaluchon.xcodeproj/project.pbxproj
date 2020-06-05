@@ -42,7 +42,6 @@
 		AC89E3D6248014BF008F9E89 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC89E3D5248014BF008F9E89 /* NetworkService.swift */; };
 		AC89E3DA24818F00008F9E89 /* WeatherTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC89E3D924818F00008F9E89 /* WeatherTableViewCell.swift */; };
 		ACC7518524884CB5009B60BC /* WeatherTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC7518424884CB5009B60BC /* WeatherTableViewDataSource.swift */; };
-		ACC7518824884D3D009B60BC /* ActivityIndicatorViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC7518724884D3D009B60BC /* ActivityIndicatorViewManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,7 +94,6 @@
 		AC89E3D5248014BF008F9E89 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		AC89E3D924818F00008F9E89 /* WeatherTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTableViewCell.swift; sourceTree = "<group>"; };
 		ACC7518424884CB5009B60BC /* WeatherTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTableViewDataSource.swift; sourceTree = "<group>"; };
-		ACC7518724884D3D009B60BC /* ActivityIndicatorViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorViewManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -294,7 +292,6 @@
 			isa = PBXGroup;
 			children = (
 				AC0F62C4248981E200187062 /* TableViewManager */,
-				ACC7518724884D3D009B60BC /* ActivityIndicatorViewManager.swift */,
 				AC89E3D2247FE281008F9E89 /* AlertManager.swift */,
 			);
 			path = ViewManagers;
@@ -474,7 +471,6 @@
 				AC8826D9246B548200EE06B2 /* TranslationNetworkManager.swift in Sources */,
 				AC89E3D6248014BF008F9E89 /* NetworkService.swift in Sources */,
 				AC89E3C7247832E2008F9E89 /* Service.swift in Sources */,
-				ACC7518824884D3D009B60BC /* ActivityIndicatorViewManager.swift in Sources */,
 				AC8826D1246B533200EE06B2 /* TranslationViewController.swift in Sources */,
 				AC8826CF246B532100EE06B2 /* CurrencyViewController.swift in Sources */,
 				AC3FC4CE24701C8A0058581D /* NetworkError.swift in Sources */,

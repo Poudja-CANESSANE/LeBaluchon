@@ -32,14 +32,8 @@ class CurrencyViewController: UIViewController {
 
     // MARK: Methods
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        activityIndicatorViewManager.setupActivityIndicator(on: view)
-    }
-
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        activityIndicatorViewManager.removeActivityIndicator()
         makeNetworkRequest()
     }
 
@@ -54,7 +48,6 @@ class CurrencyViewController: UIViewController {
         currencyUrlProvider: ServiceContainer.currencyUrlProvider)
 
     private let alertManager = ServiceContainer.alertManager
-    private let activityIndicatorViewManager = ActivityIndicatorViewManager()
     private var usRate: Double = 0
 
 
@@ -63,7 +56,6 @@ class CurrencyViewController: UIViewController {
 
     ///Gets the downloaded us rate
     private func makeNetworkRequest() {
-        activityIndicatorViewManager.setupActivityIndicator(on: view)
         currencyNetworkManager.getLatestUSDCurrencyRate { result in
             DispatchQueue.main.async {
                 switch result {
@@ -74,7 +66,6 @@ class CurrencyViewController: UIViewController {
                 }
             }
         }
-        self.activityIndicatorViewManager.removeActivityIndicator()
     }
 
     ///Updates the convertedAmountLabel with converted amount

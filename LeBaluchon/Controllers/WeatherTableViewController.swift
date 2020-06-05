@@ -47,7 +47,6 @@ class WeatherTableViewController: UIViewController {
     private let alertManager = ServiceContainer.alertManager
     private let weatherTableViewDataSource = WeatherTableViewDataSource()
     private let weatherTableViewDelegate = WeatherTableViewDelegate()
-    private let activityIndicatorViewManager = ActivityIndicatorViewManager()
 
 
 
@@ -62,7 +61,6 @@ class WeatherTableViewController: UIViewController {
 
     ///Updates the UI with the downloaded weathers
     @objc private func updateUIWithDownloadedWeathers() {
-        activityIndicatorViewManager.setupActivityIndicator(on: view)
         let cities = getCities()
 
         weatherNetworkManager.getWeathers(forCities: cities) { result in
@@ -84,7 +82,7 @@ class WeatherTableViewController: UIViewController {
         City.allCases.forEach { cities.append($0)}
         return cities
     }
-    
+
     ///Assigns a value to weatherTableViewDataSource's iconsData property
     ///by downloading the icon Data from the given dictionary of City and icon ID
     private func assignValueToIconsData(fromIconsId iconsId: [City: String]) {
@@ -101,10 +99,9 @@ class WeatherTableViewController: UIViewController {
 
     ///Assigns a value to weatherTableViewDataSource's iconsData property
     ///with the downloaded  icon Data and ends the refreshing of the refresher property
-    private func assignValueToIconsDataAndEndRefreshing(iconsData: ([City : Data])) {
+    private func assignValueToIconsDataAndEndRefreshing(iconsData: ([City: Data])) {
         print("\(iconsData) iconsData " + #function)
         self.refresher.endRefreshing()
-        self.activityIndicatorViewManager.removeActivityIndicator()
         self.weatherTableViewDataSource.iconsData = iconsData
         self.tableView.reloadData()
     }

@@ -41,7 +41,6 @@ class TranslationViewController: UIViewController {
         translationUrlProvider: ServiceContainer.translationUrlProvider)
 
     private let alertManager = ServiceContainer.alertManager
-    private let activityIndicatorViewManager = ActivityIndicatorViewManager()
 
 
 
@@ -49,7 +48,6 @@ class TranslationViewController: UIViewController {
 
     ///Gets the downloaded translation 
     private func makeNetworkRequest() {
-        activityIndicatorViewManager.setupActivityIndicator(on: view)
         let targetLanguage = getTargetLanguage()
 
         translationNetworkManager.getTranslation(
@@ -58,10 +56,8 @@ class TranslationViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let networkError):
-                    self.activityIndicatorViewManager.removeActivityIndicator()
                     self.presentAlert(msg: networkError.message)
                 case .success(let translation):
-                    self.activityIndicatorViewManager.removeActivityIndicator()
                     self.updateLabels(translation: translation)
                 }
             }
