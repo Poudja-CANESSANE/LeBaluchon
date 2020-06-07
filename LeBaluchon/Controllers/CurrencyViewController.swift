@@ -70,7 +70,7 @@ class CurrencyViewController: UIViewController {
 
     ///Updates the convertedAmountLabel with converted amount
     private func updateLabel() {
-        guard let amountToConvertString = textField.text else {
+        guard let amountToConvertString = textField.text?.replacingOccurrences(of: ",", with: ".") else {
             presentAlert(msg: "Please enter an amount to convert to dollars $ !")
             return
         }

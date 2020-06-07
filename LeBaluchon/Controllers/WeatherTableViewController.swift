@@ -67,7 +67,7 @@ class WeatherTableViewController: UIViewController {
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let networkError):
-                    self.presentAlert(msg: networkError.message + #function)
+                    self.presentAlert(msg: networkError.message)
                 case .success(let downloadedWeathers):
                     self.weatherTableViewDataSource.populateProperties(withDownloadedWeathers: downloadedWeathers)
                     self.assignValueToIconsData(fromIconsId: self.weatherTableViewDataSource.iconsId)
@@ -89,7 +89,7 @@ class WeatherTableViewController: UIViewController {
         weatherNetworkManager.getWeatherIconsData(forCitiesAndIconIds: iconsId) { result in
             DispatchQueue.main.async {
                 switch result {
-                case .failure(let networkError): self.presentAlert(msg: networkError.message + #function)
+                case .failure(let networkError): self.presentAlert(msg: networkError.message)
                 case .success(let iconsData):
                     self.assignValueToIconsDataAndEndRefreshing(iconsData: iconsData)
                 }

@@ -49,6 +49,4 @@ class URLSessionDataTaskFake: URLSessionDataTask {
     override func resume() {
         completion?(data, urlResponse, responseError)
     }
-
-    override func cancel() {}
 }
