@@ -26,7 +26,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="180"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="mkP-tE-NT1" userLabel="New York City Stack View">
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="mkP-tE-NT1">
                                                     <rect key="frame" x="23" y="19" width="274" height="142"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New York City" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cgZ-ac-LRB">
@@ -35,10 +35,10 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="64" translatesAutoresizingMaskIntoConstraints="NO" id="6cU-hL-fEl" userLabel="Nyc Weather Stack View">
+                                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="64" translatesAutoresizingMaskIntoConstraints="NO" id="6cU-hL-fEl" userLabel="Weather Stack View">
                                                             <rect key="frame" x="0.0" y="45" width="233" height="97"/>
                                                             <subviews>
-                                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="DyF-cu-8S4" userLabel="Nyc Descriptions Stack View">
+                                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="DyF-cu-8S4" userLabel="Descriptions Stack View">
                                                                     <rect key="frame" x="0.0" y="8" width="55" height="81"/>
                                                                     <subviews>
                                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KJO-yr-LQT">
@@ -53,19 +53,19 @@
                                                                         </label>
                                                                     </subviews>
                                                                 </stackView>
-                                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="3fd-9e-49y" userLabel="Nyc Temperatures Stack View">
+                                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="3fd-9e-49y" userLabel="Temperatures Stack View">
                                                                     <rect key="frame" x="119" y="29.5" width="114" height="38.5"/>
                                                                     <subviews>
-                                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="CfA-ia-EUq" userLabel="Nyc Max Min Temp Stack View">
+                                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="CfA-ia-EUq" userLabel="Max Min Temp Stack View">
                                                                             <rect key="frame" x="0.0" y="7" width="25" height="24"/>
                                                                             <subviews>
-                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="23°C" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O86-Cf-SfS" userLabel="Nyc Max Temp Label">
+                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="23°C" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O86-Cf-SfS" userLabel="Max Temp Label">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="25" height="12"/>
                                                                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                     <nil key="highlightedColor"/>
                                                                                 </label>
-                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="18°C" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yqs-H0-4qp" userLabel="Nyc Min Temp Label">
+                                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="18°C" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="yqs-H0-4qp" userLabel="Min Temp Label">
                                                                                     <rect key="frame" x="0.0" y="12" width="23.5" height="12"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                                     <fontDescription key="fontDescription" type="system" pointSize="10"/>
@@ -115,7 +115,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="AJs-aM-XQJ"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Weather" image="thermometer.sun" catalog="system" id="45J-CH-wq8"/>
+                    <tabBarItem key="tabBarItem" title="Weather" image="thermometer.sun" id="45J-CH-wq8"/>
                     <connections>
                         <outlet property="tableView" destination="dIS-Cx-sa2" id="Sv2-dj-1hj"/>
                     </connections>
@@ -135,10 +135,10 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="H3g-6t-U2u">
                                 <rect key="frame" x="20" y="20" width="280" height="343"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="mWc-7A-sKI">
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="mWc-7A-sKI" userLabel="Stack View To Translate and Translated ">
                                         <rect key="frame" x="0.0" y="0.0" width="280" height="289"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="hI6-mH-zta">
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="hI6-mH-zta" userLabel="Stack View To Translate">
                                                 <rect key="frame" x="0.0" y="0.0" width="280" height="120"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Detected Source Language:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KAg-41-msA">
@@ -154,11 +154,11 @@
                                                             <constraint firstAttribute="height" constant="100" id="43m-jf-yuW"/>
                                                         </constraints>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="done"/>
+                                                        <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                                     </textView>
                                                 </subviews>
                                             </stackView>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="hby-Wi-6ng">
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="hby-Wi-6ng" userLabel="Stack View Translated">
                                                 <rect key="frame" x="0.0" y="150" width="280" height="139"/>
                                                 <subviews>
                                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="2nF-xY-4em">
@@ -184,7 +184,7 @@
                                             <constraint firstItem="F49-1W-hkh" firstAttribute="height" secondItem="rGz-ck-wtS" secondAttribute="height" id="NfM-1A-6O8"/>
                                         </constraints>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Quq-d4-rDs">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Quq-d4-rDs" userLabel="Translate Button">
                                         <rect key="frame" x="0.0" y="309" width="280" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <state key="normal" title="Translate"/>
@@ -207,7 +207,7 @@
                             <outletCollection property="gestureRecognizers" destination="Lnq-dV-8g4" appends="YES" id="v6p-Kb-Wie"/>
                         </connections>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Translate" image="arrow.2.circlepath" catalog="system" id="Nkq-7n-FAM"/>
+                    <tabBarItem key="tabBarItem" title="Translate" image="arrow.2.circlepath" id="Nkq-7n-FAM"/>
                     <connections>
                         <outlet property="detectedSourceLanguageLabel" destination="KAg-41-msA" id="W07-qO-SaX"/>
                         <outlet property="targetLanguageSegmentedControl" destination="2nF-xY-4em" id="gxS-a7-NBg"/>
@@ -252,7 +252,7 @@ RW50ZXIgdGhlIGFtb3VudCBpbiAF4oKsIHRvIGNvbnZlcnQgdG8gJA
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WCU-sd-hB2">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WCU-sd-hB2" userLabel="Convert Button">
                                         <rect key="frame" x="86.5" y="154.5" width="87" height="42"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                         <state key="normal" title="Convert"/>
@@ -276,7 +276,7 @@ RW50ZXIgdGhlIGFtb3VudCBpbiAF4oKsIHRvIGNvbnZlcnQgdG8gJA
                             <outletCollection property="gestureRecognizers" destination="pTo-Ok-H5W" appends="YES" id="IKc-a5-Wt5"/>
                         </connections>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Currency" image="coloncurrencysign.circle" catalog="system" id="Ahz-fl-EFs"/>
+                    <tabBarItem key="tabBarItem" title="Currency" image="coloncurrencysign.circle" id="Ahz-fl-EFs"/>
                     <connections>
                         <outlet property="convertedAmountLabel" destination="1Ci-Zx-AcB" id="cPq-fJ-VgQ"/>
                         <outlet property="textField" destination="0Je-lY-doR" id="Fs0-ke-Jl9"/>
@@ -313,8 +313,8 @@ RW50ZXIgdGhlIGFtb3VudCBpbiAF4oKsIHRvIGNvbnZlcnQgdG8gJA
         </scene>
     </scenes>
     <resources>
-        <image name="arrow.2.circlepath" catalog="system" width="128" height="101"/>
-        <image name="coloncurrencysign.circle" catalog="system" width="128" height="121"/>
-        <image name="thermometer.sun" catalog="system" width="32" height="32"/>
+        <image name="arrow.2.circlepath" width="21" height="17"/>
+        <image name="coloncurrencysign.circle" width="17" height="17"/>
+        <image name="thermometer.sun" width="17" height="22"/>
     </resources>
 </document>
