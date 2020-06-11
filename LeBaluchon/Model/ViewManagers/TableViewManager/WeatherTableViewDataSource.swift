@@ -22,7 +22,7 @@ class WeatherTableViewDataSource: NSObject, UITableViewDataSource {
         cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         guard let weatherCell = tableView.dequeueReusableCell(
-            withIdentifier: "weatherCell",
+            withIdentifier: CellId.weather.rawValue,
             for: indexPath) as? WeatherTableViewCell else {
                 return WeatherTableViewCell()
         }
@@ -64,7 +64,6 @@ class WeatherTableViewDataSource: NSObject, UITableViewDataSource {
     func populateProperties(withDownloadedWeathers downloadedWeathers: [City: WeatherObject]) {
         self.populateIconsId(withWeathers: downloadedWeathers)
         self.populateWeathers(fromDownloadedWeathers: downloadedWeathers)
-//        self.assignValueToIconsData(fromIconsId: self.iconsId)
     }
 
     ///Populates the iconsId property with the weathers'key as key and the WeatherObject's iconId property as value
@@ -79,8 +78,6 @@ class WeatherTableViewDataSource: NSObject, UITableViewDataSource {
         let weathersArray: [WeatherObject] = Array(weathers.values)
         self.weathers = weathersArray
     }
-
-
 
     ///Returns an optionnal UIImage corresponding to the icon Data of the given WeatherObject from the given dictionary
     private func getIconImage(fromIconsData iconsData: [City: Data], weatherObject: WeatherObject) -> UIImage? {

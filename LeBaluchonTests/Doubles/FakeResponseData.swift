@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class FakeResponseData {
-    // MARK: Data
+    // MARK: Correct Data
 
     static var currencyCorrectData: Data {
         let bundle = Bundle(for: FakeResponseData.self)
@@ -52,9 +52,52 @@ class FakeResponseData {
         return weatherData
     }
 
-    static let incorrectData = "error".data(using: .utf8)
-
     static let iconData = UIImage(named: "savignyLeTempleIconImage")!.pngData()
+
+
+
+    // MARK: Incorrect Data
+
+    static var currencyIncorrectData: Data {
+        let bundle = Bundle(for: FakeResponseError.self)
+
+        guard let url = bundle.url(forResource: "IncorrectCurrency", withExtension: "json") else {
+            fatalError("No such resource: IncorrectCurrency.json")
+        }
+
+        guard let incorrectCurrencyData = try? Data(contentsOf: url) else {
+            fatalError("Fail to load IncorrectCurrency.json from bundle.")
+        }
+        return incorrectCurrencyData
+    }
+
+     static var translationIncorrectData: Data {
+        let bundle = Bundle(for: FakeResponseError.self)
+
+        guard let url = bundle.url(forResource: "IncorrectTranslation", withExtension: "json") else {
+            fatalError("No such resource: IncorrectTranslation.json")
+        }
+
+        guard let incorrectTranslationData = try? Data(contentsOf: url) else {
+            fatalError("Fail to load IncorrectTranslation.json from bundle.")
+        }
+        return incorrectTranslationData
+    }
+
+    static var weatherIncorrectData: Data {
+        let bundle = Bundle(for: FakeResponseError.self)
+
+        guard let url = bundle.url(forResource: "IncorrectWeather", withExtension: "json") else {
+            fatalError("No such resource: IncorrectWeather.json")
+        }
+
+        guard let incorrectWeatherData = try? Data(contentsOf: url) else {
+            fatalError("Fail to load IncorrectWeather.json from bundle.")
+        }
+        return incorrectWeatherData
+    }
+
+    static let incorrectData = "error".data(using: .utf8)
 
     static let incorrectIconData = UIImage(named: "incorrectIconImage")!.pngData()
 

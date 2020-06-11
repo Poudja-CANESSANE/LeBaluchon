@@ -24,7 +24,7 @@ enum NetworkError: Error {
         case .cannotGetUrl: return "The URL is wrong !"
         case .badStatusCode: return "The response status code is not 200 !"
         case .cannotDecodeData: return "The data decoding is impossible !"
-        case .getError: return "There is an error while getting the response !"
+        case .getError: return "An error occurred while getting the response !"
         case .noData: return "There is no data !"
         case .noResponse: return "There is no response !"
         case .cannotUnwrapUsRate: return "The unwrapping of usRate is impossible !"

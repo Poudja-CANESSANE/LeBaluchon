@@ -29,7 +29,15 @@ class WeatherNetworkManager {
         forCities cities: [City],
         completion: @escaping (Result<[City: WeatherObject], NetworkError>) -> Void) {
 
-        let urls = getUrlsForWeathers(fromCities: cities)
+        var urls: [City: URL] = [:]
+
+        do {
+            urls = try getUrlsForWeathers(fromCities: cities)
+        } catch {
+            guard let networkError = error as? NetworkError else { return }
+            completion(.failure(networkError))
+        }
+
         getWeatherObjects(fromUrls: urls) { result in
             switch result {
             case .failure(let networkError): completion(.failure(networkError))
@@ -43,7 +51,15 @@ class WeatherNetworkManager {
         forCitiesAndIconIds citiesAndIconIds: [City: String],
         completion: @escaping (Result<[City: Data], NetworkError>) -> Void) {
 
-        let urls = getUrlsForWeatherIconsData(fromCitiesAndIconIds: citiesAndIconIds)
+        var urls: [City: URL] = [:]
+
+        do {
+            urls = try getUrlsForWeatherIconsData(fromCitiesAndIconIds: citiesAndIconIds)
+        } catch {
+            guard let networkError = error as? NetworkError else { return }
+            completion(.failure(networkError))
+        }
+
         getIconsData(fromUrls: urls) { result in
             switch result {
             case .failure(let networkError): completion(.failure(networkError))
@@ -66,13 +82,14 @@ class WeatherNetworkManager {
     // MARK: Methods
 
     ///Returns the URL corresponding to each given city in a dictionary of City and URL
-    private func getUrlsForWeathers(fromCities cities: [City]) -> [City: URL] {
+    private func getUrlsForWeathers(fromCities cities: [City]) throws -> [City: URL] {
         var urls: [City: URL] = [:]
 
         for city in cities {
-            if let weatherUrl = weatherUrlProvider.getWeatherUrl(city: city) {
-                urls[city] = weatherUrl
+            guard let weatherUrl = weatherUrlProvider.getWeatherUrl(city: city) else {
+                throw NetworkError.cannotGetUrl
             }
+            urls[city] = weatherUrl
         }
         return urls
     }
@@ -107,15 +124,16 @@ class WeatherNetworkManager {
     }
 
     ///Returns the URL corresponding to the given icon ID for each given city in a dictionary of City and URL
-    private func getUrlsForWeatherIconsData(fromCitiesAndIconIds citiesAndIconIds: [City: String]) -> [City: URL] {
+    private func getUrlsForWeatherIconsData(fromCitiesAndIconIds citiesAndIconIds: [City: String])
+        throws -> [City: URL] {
 
         var urls: [City: URL] = [:]
 
         for (city, iconId) in citiesAndIconIds {
-            if let weatherIconUrl = weatherUrlProvider.getWeatherIconUrl(iconId: iconId) {
-                urls[city] = weatherIconUrl
-
+            guard let weatherIconUrl = weatherUrlProvider.getWeatherIconUrl(iconId: iconId) else {
+                throw NetworkError.cannotGetUrl
             }
+            urls[city] = weatherIconUrl
         }
         return urls
     }

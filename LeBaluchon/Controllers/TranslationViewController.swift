@@ -17,6 +17,7 @@ class TranslationViewController: UIViewController {
     @IBOutlet weak var translatedTextView: UITextView!
     @IBOutlet weak var detectedSourceLanguageLabel: UILabel!
     @IBOutlet weak var targetLanguageSegmentedControl: UISegmentedControl!
+    @IBOutlet weak var translateButton: UIButton!
 
 
 
@@ -31,6 +32,10 @@ class TranslationViewController: UIViewController {
     }
 
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupRoundedCorner()
+    }
 
     // MARK: - PRIVATE
 
@@ -41,6 +46,7 @@ class TranslationViewController: UIViewController {
         translationUrlProvider: ServiceContainer.translationUrlProvider)
 
     private let alertManager = ServiceContainer.alertManager
+    private lazy var viewsToRoundCorners: [UIView] = [toTranslateTextView, translatedTextView, translateButton]
 
 
 
@@ -52,7 +58,8 @@ class TranslationViewController: UIViewController {
 
         translationNetworkManager.getTranslation(
         forTextToTranslate: toTranslateTextView.text,
-        inTargetLanguage: targetLanguage) { result in
+        inTargetLanguage: targetLanguage) { [weak self] result in
+            guard let self = self else {return}
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let networkError):
@@ -81,6 +88,16 @@ class TranslationViewController: UIViewController {
     private func updateLabels(translation: Translation) {
         translatedTextView.text = translation.translatedText
         detectedSourceLanguageLabel.text = "Detected Source Language: \(translation.detectedSourceLanguage)"
+    }
+
+    ///Rouds the corners of the 2 UITextViews and of the translateButton
+    private func setupRoundedCorner() {
+        viewsToRoundCorners.forEach { roundCorner(forView: $0)}
+    }
+
+    ///Sets the corner radius of the given UIView to 7
+    private func roundCorner(forView view: UIView) {
+        view.layer.cornerRadius = 7
     }
 
     ///Presents an alert with the given message

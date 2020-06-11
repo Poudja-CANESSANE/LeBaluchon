@@ -15,6 +15,7 @@ class CurrencyViewController: UIViewController {
 
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var convertedAmountLabel: UILabel!
+    @IBOutlet weak var convertButton: UIButton!
 
 
 
@@ -31,6 +32,11 @@ class CurrencyViewController: UIViewController {
 
 
     // MARK: Methods
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        convertButton.layer.cornerRadius = 7
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -56,7 +62,8 @@ class CurrencyViewController: UIViewController {
 
     ///Gets the downloaded us rate
     private func makeNetworkRequest() {
-        currencyNetworkManager.getLatestUSDCurrencyRate { result in
+        currencyNetworkManager.getLatestUSDCurrencyRate { [weak self] result in
+            guard let self = self else {return}
             DispatchQueue.main.async {
                 switch result {
                 case .success(let usRate):

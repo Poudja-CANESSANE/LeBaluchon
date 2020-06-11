@@ -15,11 +15,6 @@ class WeatherTableViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
 
-    lazy var refresher: UIRefreshControl = {
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(updateUIWithDownloadedWeathers), for: .valueChanged)
-        return refreshControl
-    }()
 
 
     // MARK: Methods
@@ -48,6 +43,12 @@ class WeatherTableViewController: UIViewController {
     private let weatherTableViewDataSource = WeatherTableViewDataSource()
     private let weatherTableViewDelegate = WeatherTableViewDelegate()
 
+    private lazy var refresher: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(updateUIWithDownloadedWeathers), for: .valueChanged)
+        return refreshControl
+    }()
+
 
 
     // MARK: Methods
@@ -63,7 +64,8 @@ class WeatherTableViewController: UIViewController {
     @objc private func updateUIWithDownloadedWeathers() {
         let cities = getCities()
 
-        weatherNetworkManager.getWeathers(forCities: cities) { result in
+        weatherNetworkManager.getWeathers(forCities: cities) { [weak self] result in
+            guard let self = self else {return}
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let networkError):
@@ -86,7 +88,8 @@ class WeatherTableViewController: UIViewController {
     ///Assigns a value to weatherTableViewDataSource's iconsData property
     ///by downloading the icon Data from the given dictionary of City and icon ID
     private func assignValueToIconsData(fromIconsId iconsId: [City: String]) {
-        weatherNetworkManager.getWeatherIconsData(forCitiesAndIconIds: iconsId) { result in
+        weatherNetworkManager.getWeatherIconsData(forCitiesAndIconIds: iconsId) { [weak self] result in
+            guard let self = self else {return}
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let networkError): self.presentAlert(msg: networkError.message)
@@ -100,9 +103,9 @@ class WeatherTableViewController: UIViewController {
     ///Assigns a value to weatherTableViewDataSource's iconsData property
     ///with the downloaded  icon Data and ends the refreshing of the refresher property
     private func assignValueToIconsDataAndEndRefreshing(iconsData: ([City: Data])) {
-        self.refresher.endRefreshing()
-        self.weatherTableViewDataSource.iconsData = iconsData
-        self.tableView.reloadData()
+        refresher.endRefreshing()
+        weatherTableViewDataSource.iconsData = iconsData
+        tableView.reloadData()
     }
 
     ///Presents an alert with the given message

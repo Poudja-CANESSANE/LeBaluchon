@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct WeatherObject {
+struct WeatherObject: Equatable {
     let temperature, tempMin, tempMax: Int
     let name, main, description, iconId: String
 }

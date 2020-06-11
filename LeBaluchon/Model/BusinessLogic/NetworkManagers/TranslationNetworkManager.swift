@@ -36,7 +36,8 @@ class TranslationNetworkManager {
             return
         }
 
-        networkService.fetchData(url: translationUrl) { (result: Result<TranslationResult, NetworkError>) in
+        networkService.fetchData(url: translationUrl) { [weak self] (result: Result<TranslationResult, NetworkError>) in
+            guard let self = self else {return}
             switch result {
             case .failure(let networkError): completion(.failure(networkError))
             case .success(let response):
@@ -44,7 +45,7 @@ class TranslationNetworkManager {
                     let translation = try self.createTranslation(fromResponse: response)
                     completion(.success(translation))
                 } catch {
-                    guard let error = error as? NetworkError else {return}
+                    guard let error = error as? NetworkError else { return }
                     completion(.failure(error))
                 }
             }
@@ -85,6 +86,9 @@ class TranslationNetworkManager {
         var formattedString = string
         formattedString = replacePotential("&#39;", with: "‘", in: formattedString)
         formattedString = replacePotential("&quot;", with: "\"", in: formattedString)
+        formattedString = replacePotential("&amp;", with: "&", in: formattedString)
+        formattedString = replacePotential("&lt;", with: "<", in: formattedString)
+        formattedString = replacePotential("&gt;", with: ">", in: formattedString)
         return formattedString
     }
 
