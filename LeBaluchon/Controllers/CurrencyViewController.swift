@@ -22,7 +22,7 @@ class CurrencyViewController: UIViewController {
     // MARK: IBActions
 
     @IBAction func didTapConvertButton(_ sender: UIButton) {
-        updateLabel()
+        updateConvertedAmountLabel()
     }
 
     @IBAction func dismissKeyboard(_ sender: UITapGestureRecognizer) {
@@ -75,8 +75,8 @@ class CurrencyViewController: UIViewController {
         }
     }
 
-    ///Updates the convertedAmountLabel with converted amount
-    private func updateLabel() {
+    ///Updates convertedAmountLabel with converted and formatted amount
+    private func updateConvertedAmountLabel() {
         guard let amountToConvertString = textField.text?.replacingOccurrences(of: ",", with: ".") else {
             presentAlert(msg: "Please enter an amount to convert to dollars $ !")
             return
@@ -87,19 +87,21 @@ class CurrencyViewController: UIViewController {
             return
         }
 
-        let amount = (amountToConvertDouble * usRate)
-        let formattedAmount = formatConvertedAmount(amount: amount)
+        let convertedAmount = (amountToConvertDouble * usRate)
+        let formattedAmount = format(amount: convertedAmount)
         convertedAmountLabel.text = formattedAmount + "$"
     }
 
     ///Returns the given amount with spaces and comma to make it more readable
-    private func formatConvertedAmount(amount: Double) -> String {
+    private func format(amount: Double) -> String {
         let currencyFormatter = NumberFormatter()
         currencyFormatter.usesGroupingSeparator = true
         currencyFormatter.numberStyle = .currency
         currencyFormatter.maximumFractionDigits = 2
         currencyFormatter.locale = Locale(identifier: "fr_FR")
-        guard var formattedAmount = currencyFormatter.string(from: NSNumber(value: amount)) else { return "" }
+        guard var formattedAmount = currencyFormatter.string(from: NSNumber(value: amount)) else {
+            presentAlert(msg: "Cannot format the converted amount !")
+            return "" }
         formattedAmount = String(formattedAmount.dropLast())
         return formattedAmount
     }

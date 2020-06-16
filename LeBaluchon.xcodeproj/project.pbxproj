@@ -224,9 +224,9 @@
 		AC8826A7246B521900EE06B2 /* LeBaluchon */ = {
 			isa = PBXGroup;
 			children = (
-				AC8826CD246B524900EE06B2 /* Controllers */,
-				AC8826CC246B524300EE06B2 /* View */,
 				AC8826CB246B523A00EE06B2 /* Model */,
+				AC8826CC246B524300EE06B2 /* View */,
+				AC8826CD246B524900EE06B2 /* Controllers */,
 				AC8826CA246B522D00EE06B2 /* Supporting Files */,
 			);
 			path = LeBaluchon;
@@ -256,8 +256,8 @@
 		AC8826CB246B523A00EE06B2 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				ACC7518624884CF4009B60BC /* ViewManagers */,
 				ACC7518924884D83009B60BC /* BusinessLogic */,
+				ACC7518624884CF4009B60BC /* ViewManagers */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -294,8 +294,8 @@
 		AC89E3D124784FBE008F9E89 /* ServiceContainer */ = {
 			isa = PBXGroup;
 			children = (
-				AC89E3D4248014A1008F9E89 /* NetworkService */,
 				AC89E3CA247833A5008F9E89 /* URLProviders */,
+				AC89E3D4248014A1008F9E89 /* NetworkService */,
 				AC89E3CF24783464008F9E89 /* ServiceContainer.swift */,
 			);
 			path = ServiceContainer;
@@ -352,9 +352,9 @@
 		ACC7518924884D83009B60BC /* BusinessLogic */ = {
 			isa = PBXGroup;
 			children = (
-				AC89E3D124784FBE008F9E89 /* ServiceContainer */,
 				AC3FC4D72471ADD70058581D /* Enums */,
 				AC3FC4D62471AD8F0058581D /* Structs */,
+				AC89E3D124784FBE008F9E89 /* ServiceContainer */,
 				AC3FC4D52471AD750058581D /* NetworkManagers */,
 			);
 			path = BusinessLogic;

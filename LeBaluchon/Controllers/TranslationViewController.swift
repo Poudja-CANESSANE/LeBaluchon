@@ -32,6 +32,9 @@ class TranslationViewController: UIViewController {
     }
 
 
+
+    // MARK: Methods
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupRoundedCorner()
@@ -52,7 +55,7 @@ class TranslationViewController: UIViewController {
 
     // MARK: Methods
 
-    ///Gets the downloaded translation 
+    ///Gets the downloaded Translation
     private func makeNetworkRequest() {
         let targetLanguage = getTargetLanguage()
 
@@ -92,7 +95,7 @@ class TranslationViewController: UIViewController {
 
     ///Rouds the corners of the 2 UITextViews and of the translateButton
     private func setupRoundedCorner() {
-        viewsToRoundCorners.forEach { roundCorner(forView: $0)}
+        viewsToRoundCorners.forEach { roundCorner(forView: $0) }
     }
 
     ///Sets the corner radius of the given UIView to 7

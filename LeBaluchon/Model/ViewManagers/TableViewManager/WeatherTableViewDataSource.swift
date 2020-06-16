@@ -42,6 +42,12 @@ class WeatherTableViewDataSource: NSObject, UITableViewDataSource {
         return weatherCell
     }
 
+    ///Populates iconsId and weathers properties with the given dictionary of City and WeatherObject
+    func populateProperties(withDownloadedWeathers downloadedWeathers: [City: WeatherObject]) {
+        populateIconsId(withWeathers: downloadedWeathers)
+        populateWeathers(fromDownloadedWeathers: downloadedWeathers)
+    }
+
 
 
     // MARK: - PRIVATE
@@ -61,15 +67,10 @@ class WeatherTableViewDataSource: NSObject, UITableViewDataSource {
 
     // MARK: Methods
 
-    func populateProperties(withDownloadedWeathers downloadedWeathers: [City: WeatherObject]) {
-        self.populateIconsId(withWeathers: downloadedWeathers)
-        self.populateWeathers(fromDownloadedWeathers: downloadedWeathers)
-    }
-
-    ///Populates the iconsId property with the weathers'key as key and the WeatherObject's iconId property as value
+    ///Populates the iconsId property with the given dictionary by mapping the values
+    ///in order to have the iconId property as value
     private func populateIconsId(withWeathers weathers: [City: WeatherObject]) {
-        var iconIds: [City: String] = [:]
-        weathers.forEach { iconIds[$0.key] = $0.value.iconId }
+        let iconIds = weathers.mapValues { $0.iconId }
         self.iconsId = iconIds
     }
 

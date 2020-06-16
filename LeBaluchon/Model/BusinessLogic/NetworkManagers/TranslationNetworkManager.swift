@@ -92,6 +92,7 @@ class TranslationNetworkManager {
         return formattedString
     }
 
+    ///Returns the given String by replacing the given HTML character reference by the given replacement String
     private func replacePotential(
         _ stringToReplace: String,
         with replacementString: String,

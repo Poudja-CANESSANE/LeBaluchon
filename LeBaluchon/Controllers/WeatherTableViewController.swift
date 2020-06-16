@@ -62,9 +62,7 @@ class WeatherTableViewController: UIViewController {
 
     ///Updates the UI with the downloaded weathers
     @objc private func updateUIWithDownloadedWeathers() {
-        let cities = getCities()
-
-        weatherNetworkManager.getWeathers(forCities: cities) { [weak self] result in
+        weatherNetworkManager.getWeathers(forCities: City.allCases) { [weak self] result in
             guard let self = self else {return}
             DispatchQueue.main.async {
                 switch result {
@@ -72,22 +70,15 @@ class WeatherTableViewController: UIViewController {
                     self.presentAlert(msg: networkError.message)
                 case .success(let downloadedWeathers):
                     self.weatherTableViewDataSource.populateProperties(withDownloadedWeathers: downloadedWeathers)
-                    self.assignValueToIconsData(fromIconsId: self.weatherTableViewDataSource.iconsId)
+                    self.downloadIconDataAndPopulateIconsData(fromIconsId: self.weatherTableViewDataSource.iconsId)
                 }
             }
         }
     }
 
-    ///Returns an array containing all City cases
-    private func getCities() -> [City] {
-        var cities: [City] = []
-        City.allCases.forEach { cities.append($0)}
-        return cities
-    }
-
     ///Assigns a value to weatherTableViewDataSource's iconsData property
     ///by downloading the icon Data from the given dictionary of City and icon ID
-    private func assignValueToIconsData(fromIconsId iconsId: [City: String]) {
+    private func downloadIconDataAndPopulateIconsData(fromIconsId iconsId: [City: String]) {
         weatherNetworkManager.getWeatherIconsData(forCitiesAndIconIds: iconsId) { [weak self] result in
             guard let self = self else {return}
             DispatchQueue.main.async {
