@@ -14,7 +14,8 @@ class CurrencyUrlProviderImplementation: CurrencyUrlProvider {
         let weatherFunctionality = Functionality.currency
         guard var urlComponents = URLComponents(string: weatherFunctionality.baseUrl) else { return nil }
 
-        weatherFunctionality.urlParameters.forEach { urlComponents.queryItems?.append(URLQueryItem(name: $0.key, value: $0.value)) }
+        weatherFunctionality.urlParameters.forEach { urlComponents.queryItems?.append(
+            URLQueryItem(name: $0.key, value: $0.value)) }
 
         return urlComponents.url
     }

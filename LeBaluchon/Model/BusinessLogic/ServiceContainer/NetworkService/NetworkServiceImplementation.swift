@@ -64,7 +64,8 @@ class NetworkServiceImplementation: NetworkService {
 
     // MARK: Methods
 
-    ///Checks  Returns by the completion parameter the downloaded Data
+    ///Checks if the response of the network call has no error, has data and if the statusCode is equal to 200
+    ///then returns by the completion parameter the downloaded Data
     private func verifyResponse(
         data: Data?,
         response: URLResponse?,

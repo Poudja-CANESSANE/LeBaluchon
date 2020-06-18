@@ -15,7 +15,8 @@ class TranslationUrlProviderImplementation: TranslationUrlProvider {
         let translationFunctionality = Functionality.translation
         guard var urlComponents = URLComponents(string: translationFunctionality.baseUrl) else { return nil }
 
-        translationFunctionality.urlParameters.forEach { urlComponents.queryItems?.append(URLQueryItem(name: $0.key, value: $0.value)) }
+        translationFunctionality.urlParameters.forEach { urlComponents.queryItems?.append(
+            URLQueryItem(name: $0.key, value: $0.value)) }
 
         urlComponents.queryItems?.append(URLQueryItem(name: "q", value: stringToTranslate))
         urlComponents.queryItems?.append(URLQueryItem(name: "target", value: targetLanguage))

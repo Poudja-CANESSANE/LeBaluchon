@@ -14,7 +14,8 @@ class WeatherUrlProviderImplementation: WeatherUrlProvider {
         let weatherFunctionality = Functionality.weather
         guard var urlComponents = URLComponents(string: weatherFunctionality.baseUrl) else { return nil }
 
-        weatherFunctionality.urlParameters.forEach { urlComponents.queryItems?.append(URLQueryItem(name: $0.key, value: $0.value)) }
+        weatherFunctionality.urlParameters.forEach { urlComponents.queryItems?.append(
+            URLQueryItem(name: $0.key, value: $0.value)) }
 
         urlComponents.queryItems?.append(URLQueryItem(name: "q", value: city.name))
 
