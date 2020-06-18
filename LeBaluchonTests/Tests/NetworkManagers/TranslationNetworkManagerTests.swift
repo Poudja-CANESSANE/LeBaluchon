@@ -9,7 +9,7 @@
 import XCTest
 @testable import LeBaluchon
 
-class TranslationTests: XCTestCase {
+class TranslationNetworkManagerTests: XCTestCase {
     func testGetTranslationShouldFailIfError() {
         let translationNetworkManager = getTranslationNetworkManager(
             data: nil, response: nil, error: FakeResponseData.error)
@@ -100,7 +100,7 @@ class TranslationTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Wait")
         translationNetworkManager.getTranslation(forTextToTranslate: "Bonjour", inTargetLanguage: "en") { result in
             if case .failure(let networkError) = result {
-                XCTAssertEqual(networkError, NetworkError.cannotCreateTranslation)
+                XCTAssertEqual(networkError, NetworkError.cannotUnwrapFirstTranslation)
             } else { XCTFail() }
             expectation.fulfill()
         }
@@ -130,6 +130,7 @@ class TranslationTests: XCTestCase {
 
     // MARK: Tools
 
+    ///Returns a TraslationNetworkManager with a URLSessionFake from the given Data?, HTTPURLResponse? and Error?
     private func getTranslationNetworkManager(
         data: Data?,
         response: HTTPURLResponse?,
@@ -144,6 +145,7 @@ class TranslationTests: XCTestCase {
         return translationNetworkManager
     }
 
+    ///Returns a TranslationNetworkManager with a URLSessionFake and a TranslationUrlProviderStub
     private func getTranslationNetworkManagerWithStubUrlProvider() -> TranslationNetworkManager {
         let sessionFake = URLSessionFake(data: nil, response: nil, error: nil)
 

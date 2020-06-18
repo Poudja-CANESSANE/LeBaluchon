@@ -11,17 +11,6 @@ import UIKit
 class WeatherTableViewCell: UITableViewCell {
     // MARK: - INTERNAL
 
-    // MARK: IBOtlets
-
-    @IBOutlet weak var cityLabel: UILabel!
-    @IBOutlet weak var descriptionLabel: UILabel!
-    @IBOutlet weak var minTempLabel: UILabel!
-    @IBOutlet weak var maxTempLabel: UILabel!
-    @IBOutlet weak var temperatureLabel: UILabel!
-    @IBOutlet weak var iconImageView: UIImageView!
-
-
-
     // MARK: Methods
 
     ///Updates the weather cell with the given WeatherObject and iconImage
@@ -33,4 +22,17 @@ class WeatherTableViewCell: UITableViewCell {
         temperatureLabel.text = "\(weatherObject.temperature)°C"
         iconImageView.image = iconImage
     }
+
+
+
+    // MARK: - PRIVATE
+
+    // MARK: IBOutlets
+
+    @IBOutlet private weak var cityLabel: UILabel!
+    @IBOutlet private weak var descriptionLabel: UILabel!
+    @IBOutlet private weak var minTempLabel: UILabel!
+    @IBOutlet private weak var maxTempLabel: UILabel!
+    @IBOutlet private weak var temperatureLabel: UILabel!
+    @IBOutlet private weak var iconImageView: UIImageView!
 }

@@ -16,8 +16,8 @@ enum NetworkError: Error {
     case badStatusCode
     case cannotDecodeData
     case cannotUnwrapUsRate
-    case cannotCreateTranslation
-    case cannotCreateWeatherObject
+    case cannotUnwrapFirstTranslation
+    case cannotUnwrapFirstWeather
 
     var message: String {
         switch self {
@@ -28,8 +28,8 @@ enum NetworkError: Error {
         case .noData: return "There is no data !"
         case .noResponse: return "There is no response !"
         case .cannotUnwrapUsRate: return "The unwrapping of usRate is impossible !"
-        case .cannotCreateTranslation: return "The creation of a Translation object is impossible !"
-        case .cannotCreateWeatherObject: return "The creation of a WeatherObject is impossible !"
+        case .cannotUnwrapFirstTranslation: return "The unwrapping of the first Translation is impossible !"
+        case .cannotUnwrapFirstWeather: return "The unwrapping of the first WeatherObject is impossible !"
         }
     }
 }

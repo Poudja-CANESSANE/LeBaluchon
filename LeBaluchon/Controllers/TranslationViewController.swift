@@ -11,28 +11,6 @@ import UIKit
 class TranslationViewController: UIViewController {
     // MARK: - INTERNAL
 
-    // MARK: IBOutlets
-
-    @IBOutlet weak var toTranslateTextView: UITextView!
-    @IBOutlet weak var translatedTextView: UITextView!
-    @IBOutlet weak var detectedSourceLanguageLabel: UILabel!
-    @IBOutlet weak var targetLanguageSegmentedControl: UISegmentedControl!
-    @IBOutlet weak var translateButton: UIButton!
-
-
-
-    // MARK: IBActions
-
-    @IBAction func dismissKeyboard(_ sender: UITapGestureRecognizer) {
-        toTranslateTextView.resignFirstResponder()
-    }
-
-    @IBAction func didTapTranslateButton(_ sender: UIButton) {
-        makeNetworkRequest()
-    }
-
-
-
     // MARK: Methods
 
     override func viewWillAppear(_ animated: Bool) {
@@ -41,6 +19,28 @@ class TranslationViewController: UIViewController {
     }
 
     // MARK: - PRIVATE
+
+    // MARK: IBOutlets
+
+    @IBOutlet private weak var toTranslateTextView: UITextView!
+    @IBOutlet private weak var translatedTextView: UITextView!
+    @IBOutlet private weak var detectedSourceLanguageLabel: UILabel!
+    @IBOutlet private weak var targetLanguageSegmentedControl: UISegmentedControl!
+    @IBOutlet private weak var translateButton: UIButton!
+
+
+
+    // MARK: IBActions
+
+    @IBAction private func dismissKeyboard(_ sender: UITapGestureRecognizer) {
+        toTranslateTextView.resignFirstResponder()
+    }
+
+    @IBAction private func didTapTranslateButton(_ sender: UIButton) {
+        makeNetworkRequest()
+    }
+
+
 
     // MARK: Properties
 
@@ -62,7 +62,7 @@ class TranslationViewController: UIViewController {
         translationNetworkManager.getTranslation(
         forTextToTranslate: toTranslateTextView.text,
         inTargetLanguage: targetLanguage) { [weak self] result in
-            guard let self = self else {return}
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let networkError):

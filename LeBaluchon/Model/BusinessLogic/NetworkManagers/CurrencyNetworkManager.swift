@@ -11,6 +11,10 @@ import Foundation
 class CurrencyNetworkManager {
     // MARK: - INTERNAL
 
+    typealias CurrencyCompletion = (Result<Double, NetworkError>) -> Void
+
+
+
     // MARK: Inits
 
     init(networkService: NetworkService,
@@ -24,7 +28,7 @@ class CurrencyNetworkManager {
     // MARK: Methods
 
     ///Returns by the completion parameter the downloaded us rate
-    func getLatestUSDCurrencyRate(completion: @escaping (Result<Double, NetworkError>) -> Void) {
+    func getLatestUSDCurrencyRate(completion: @escaping CurrencyCompletion) {
         guard let latestCurrencyUrl = currencyUrlProvider.getLatestCurrencyUrl() else {
             completion(.failure(.cannotGetUrl))
             return

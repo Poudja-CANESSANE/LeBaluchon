@@ -12,11 +12,10 @@ class TranslationUrlProviderImplementation: TranslationUrlProvider {
     ///Returns an optionnal URL to get the translation for the given String in the given target language
     ///from the translation.googleapis.com API
     func getTranslationUrl(stringToTranslate: String, targetLanguage: String) -> URL? {
-        let service = Service.translation
-        guard var urlComponents = URLComponents(string: service.baseUrl) else { return nil }
+        let translationFunctionality = Functionality.translation
+        guard var urlComponents = URLComponents(string: translationFunctionality.baseUrl) else { return nil }
 
-        urlComponents.queryItems = [URLQueryItem]()
-        service.urlParameters.forEach { urlComponents.queryItems?.append(URLQueryItem(name: $0.key, value: $0.value)) }
+        translationFunctionality.urlParameters.forEach { urlComponents.queryItems?.append(URLQueryItem(name: $0.key, value: $0.value)) }
 
         urlComponents.queryItems?.append(URLQueryItem(name: "q", value: stringToTranslate))
         urlComponents.queryItems?.append(URLQueryItem(name: "target", value: targetLanguage))

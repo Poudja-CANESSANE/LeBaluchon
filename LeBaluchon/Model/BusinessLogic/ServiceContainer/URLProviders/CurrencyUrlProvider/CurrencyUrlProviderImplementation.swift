@@ -11,11 +11,10 @@ import Foundation
 class CurrencyUrlProviderImplementation: CurrencyUrlProvider {
     ///Returns an optionnal URL to get the latest currency rates from the data.fixer.io API
     func getLatestCurrencyUrl() -> URL? {
-        let service = Service.currency
-        guard var urlComponents = URLComponents(string: service.baseUrl) else { return nil }
+        let weatherFunctionality = Functionality.currency
+        guard var urlComponents = URLComponents(string: weatherFunctionality.baseUrl) else { return nil }
 
-        urlComponents.queryItems = [URLQueryItem]()
-        service.urlParameters.forEach { urlComponents.queryItems?.append(URLQueryItem(name: $0.key, value: $0.value)) }
+        weatherFunctionality.urlParameters.forEach { urlComponents.queryItems?.append(URLQueryItem(name: $0.key, value: $0.value)) }
 
         return urlComponents.url
     }

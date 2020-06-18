@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Service {
+enum Functionality {
     case currency, translation, weather, weatherIcon
 
     var baseUrl: String {

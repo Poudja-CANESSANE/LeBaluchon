@@ -9,7 +9,7 @@
 import XCTest
 @testable import LeBaluchon
 
-class CurrencyTests: XCTestCase {
+class CurrencyNetworkManagerTests: XCTestCase {
     func testGetLatestUSDCurrencyRateShouldFailIfError() {
         let currencyNetworkManager = getCurrencyNetworkManager(
             data: nil, response: nil, error: FakeResponseData.error)
@@ -126,6 +126,7 @@ class CurrencyTests: XCTestCase {
 
     // MARK: Tools
 
+    ///Returns a CurrencyNetworkManager with a URLSessionFake from the given Data?, HTTPURLResponse? and Error?
     private func getCurrencyNetworkManager(
         data: Data?,
         response: HTTPURLResponse?,
@@ -140,6 +141,7 @@ class CurrencyTests: XCTestCase {
         return currencyNetworkManager
     }
 
+    ///Returns a CurrencyNetworkManager with a URLSessionFake and a CurrencyUrlProviderStub
     private func getCurrencyNetworkManagerWithStubUrlProvider() -> CurrencyNetworkManager {
         let sessionFake = URLSessionFake(data: nil, response: nil, error: nil)
 

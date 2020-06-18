@@ -23,60 +23,33 @@ class NetworkServiceImplementation: NetworkService {
 
     ///Returns by the completion parameter the downloaded Data of generic type from the given URL
     func fetchData<T: Codable>(url: URL, completion: @escaping (Result<T, NetworkError>) -> Void) {
-        session.dataTask(with: url, completionHandler: { (data, response, error) in
-            guard error == nil else {
-                completion(.failure(.getError))
-                return
-            }
-            guard let data = data else {
-                completion(.failure(.noData))
-                return
-            }
+        session.dataTask(with: url) { (data, response, error) in
+            self.verifyResponse(data: data, response: response, error: error) { result in
+                switch result {
+                case .failure(let networkError):
+                    completion(.failure(networkError))
+                case .success(let data):
+                    guard let responseJSON = try? JSONDecoder().decode(T.self, from: data) else {
+                        completion(.failure(.cannotDecodeData))
+                        return
+                    }
 
-            guard let response = response as? HTTPURLResponse else {
-                completion(.failure(.noResponse))
-                return
+                    completion(.success(responseJSON))
+                }
             }
-
-            guard response.statusCode == 200 else {
-                completion(.failure(.badStatusCode))
-                return
-            }
-
-            guard let responseJSON = try? JSONDecoder().decode(T.self, from: data) else {
-                completion(.failure(.cannotDecodeData))
-                return
-            }
-
-            completion(.success(responseJSON))
-
-        }).resume()
+        }.resume()
     }
 
     ///Returns by the completion parameter the downloded Data from the given URL
     func fetchData(url: URL, completion: @escaping (Result<Data, NetworkError>) -> Void) {
-        session.dataTask(with: url, completionHandler: { (data, response, error) in
-            guard error == nil else {
-                completion(.failure(.getError))
-                return
+        session.dataTask(with: url) { (data, response, error) in
+            self.verifyResponse(data: data, response: response, error: error) { result in
+                switch result {
+                case .failure(let networkError): completion(.failure(networkError))
+                case .success(let data): completion(.success(data))
+                }
             }
-            guard let data = data else {
-                completion(.failure(.noData))
-                return
-            }
-
-            guard let response = response as? HTTPURLResponse else {
-                completion(.failure(.noResponse))
-                return
-            }
-
-            guard response.statusCode == 200 else {
-                completion(.failure(.badStatusCode))
-                return
-            }
-
-            completion(.success(data))
-        }).resume()
+        }.resume()
     }
 
 
@@ -86,4 +59,37 @@ class NetworkServiceImplementation: NetworkService {
     // MARK: Properties
 
     private var session: URLSession
+
+
+
+    // MARK: Methods
+
+    ///Checks  Returns by the completion parameter the downloaded Data
+    private func verifyResponse(
+        data: Data?,
+        response: URLResponse?,
+        error: Error?,
+        completion: (Result<Data, NetworkError>) -> Void) {
+
+        guard error == nil else {
+            completion(.failure(.getError))
+            return
+        }
+        guard let data = data else {
+            completion(.failure(.noData))
+            return
+        }
+
+        guard let response = response as? HTTPURLResponse else {
+            completion(.failure(.noResponse))
+            return
+        }
+
+        guard response.statusCode == 200 else {
+            completion(.failure(.badStatusCode))
+            return
+        }
+
+        completion(.success(data))
+    }
 }

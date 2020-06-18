@@ -11,26 +11,6 @@ import UIKit
 class CurrencyViewController: UIViewController {
     // MARK: - INTERNAL
 
-    // MARK: IBOutlets
-
-    @IBOutlet weak var textField: UITextField!
-    @IBOutlet weak var convertedAmountLabel: UILabel!
-    @IBOutlet weak var convertButton: UIButton!
-
-
-
-    // MARK: IBActions
-
-    @IBAction func didTapConvertButton(_ sender: UIButton) {
-        updateConvertedAmountLabel()
-    }
-
-    @IBAction func dismissKeyboard(_ sender: UITapGestureRecognizer) {
-        textField.resignFirstResponder()
-    }
-
-
-
     // MARK: Methods
 
     override func viewWillAppear(_ animated: Bool) {
@@ -46,6 +26,24 @@ class CurrencyViewController: UIViewController {
 
 
     // MARK: - PRIVATE
+
+    // MARK: IBOutlets
+
+    @IBOutlet private weak var textField: UITextField!
+    @IBOutlet private weak var convertedAmountLabel: UILabel!
+    @IBOutlet private weak var convertButton: UIButton!
+
+
+
+    // MARK: IBActions
+
+    @IBAction private func didTapConvertButton(_ sender: UIButton) {
+        updateConvertedAmountLabel()
+    }
+
+    @IBAction private func dismissKeyboard(_ sender: UITapGestureRecognizer) {
+        textField.resignFirstResponder()
+    }
 
     // MARK: Properties
 
@@ -63,7 +61,7 @@ class CurrencyViewController: UIViewController {
     ///Gets the downloaded us rate
     private func makeNetworkRequest() {
         currencyNetworkManager.getLatestUSDCurrencyRate { [weak self] result in
-            guard let self = self else {return}
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
                 case .success(let usRate):

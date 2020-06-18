@@ -11,6 +11,9 @@ import Foundation
 class WeatherNetworkManager {
     // MARK: - INTERNAL
 
+    typealias WeatherCompletion = (Result<[City: WeatherObject], NetworkError>) -> Void
+    typealias WeatherIconCompletion = (Result<[City: Data], NetworkError>) -> Void
+
     // MARK: Inits
 
     init(networkService: NetworkService,
@@ -25,23 +28,18 @@ class WeatherNetworkManager {
 
     ///Returns by the completion parameter the WeatherObject corresponding to the given cities
     ///from the downloaded WeatherResult
-    func getWeathers(
-        forCities cities: [City],
-        completion: @escaping (Result<[City: WeatherObject], NetworkError>) -> Void) {
+    func getWeathers(forCities cities: [City], completion: @escaping WeatherCompletion) {
+        let urlsResult = getUrlsForWeathers(fromCities: cities)
 
-        var urls: [City: URL] = [:]
-
-        do {
-            urls = try getUrlsForWeathers(fromCities: cities)
-        } catch {
-            guard let networkError = error as? NetworkError else { return }
+        switch urlsResult {
+        case .failure(let networkError):
             completion(.failure(networkError))
-        }
-
-        getWeatherObjects(fromUrls: urls) { result in
-            switch result {
-            case .failure(let networkError): completion(.failure(networkError))
-            case .success(let weatherObjects): completion(.success(weatherObjects))
+        case .success(let urls):
+            getWeatherObjects(fromUrls: urls) { result in
+                switch result {
+                case .failure(let networkError): completion(.failure(networkError))
+                case .success(let weatherObjects): completion(.success(weatherObjects))
+                }
             }
         }
     }
@@ -51,19 +49,17 @@ class WeatherNetworkManager {
         forCitiesAndIconIds citiesAndIconIds: [City: String],
         completion: @escaping (Result<[City: Data], NetworkError>) -> Void) {
 
-        var urls: [City: URL] = [:]
+        let urlsResult = getUrlsForWeatherIconsData(fromCitiesAndIconIds: citiesAndIconIds)
 
-        do {
-            urls = try getUrlsForWeatherIconsData(fromCitiesAndIconIds: citiesAndIconIds)
-        } catch {
-            guard let networkError = error as? NetworkError else { return }
+        switch urlsResult {
+        case .failure(let networkError):
             completion(.failure(networkError))
-        }
-
-        getIconsData(fromUrls: urls) { result in
-            switch result {
-            case .failure(let networkError): completion(.failure(networkError))
-            case .success(let iconsData): completion(.success(iconsData))
+        case .success(let urls):
+            getIconsData(fromUrls: urls) { result in
+                switch result {
+                case .failure(let networkError): completion(.failure(networkError))
+                case .success(let iconsData): completion(.success(iconsData))
+                }
             }
         }
     }
@@ -82,23 +78,23 @@ class WeatherNetworkManager {
     // MARK: Methods
 
     ///Returns the URL corresponding to each given city in a dictionary of City and URL
-    private func getUrlsForWeathers(fromCities cities: [City]) throws -> [City: URL] {
+    private func getUrlsForWeathers(fromCities cities: [City]) -> Result<[City: URL], NetworkError> {
         var urls: [City: URL] = [:]
 
         for city in cities {
             guard let weatherUrl = weatherUrlProvider.getWeatherUrl(city: city) else {
-                throw NetworkError.cannotGetUrl
+                return .failure(NetworkError.cannotGetUrl)
             }
             urls[city] = weatherUrl
         }
-        return urls
+        return .success(urls)
     }
 
     ///Returns by the completion parameter the WeatherObject from the given URL corresponding to the given city
     ///in a dictionary of City and WeatherObject
     private func getWeatherObjects(
         fromUrls urls: [City: URL],
-        completion: @escaping (Result<[City: WeatherObject], NetworkError>) -> Void) {
+        completion: @escaping WeatherCompletion) {
 
         var weatherObjects: [City: WeatherObject] = [:]
 
@@ -108,11 +104,13 @@ class WeatherNetworkManager {
                 case .failure(let networkError):
                     completion(.failure(networkError))
                 case .success(let cityResponse):
-                    do {
-                        weatherObjects[city] = try self.createWeatherObject(fromResponse: cityResponse)
-                    } catch {
-                        guard let networkError = error as? NetworkError else { return }
+                    let weatherResult = self.createWeatherObject(fromResponse: cityResponse)
+
+                    switch weatherResult {
+                    case .failure(let networkError):
                         completion(.failure(networkError))
+                    case .success(let weather):
+                        weatherObjects[city] = weather
                     }
 
                     if weatherObjects.count == urls.count {
@@ -125,24 +123,24 @@ class WeatherNetworkManager {
 
     ///Returns the URL corresponding to the given icon ID for each given city in a dictionary of City and URL
     private func getUrlsForWeatherIconsData(fromCitiesAndIconIds citiesAndIconIds: [City: String])
-        throws -> [City: URL] {
+        -> Result<[City: URL], NetworkError> {
 
         var urls: [City: URL] = [:]
 
         for (city, iconId) in citiesAndIconIds {
             guard let weatherIconUrl = weatherUrlProvider.getWeatherIconUrl(iconId: iconId) else {
-                throw NetworkError.cannotGetUrl
+                return .failure(NetworkError.cannotGetUrl)
             }
             urls[city] = weatherIconUrl
         }
-        return urls
+        return .success(urls)
     }
 
     ///Returns by the completion parameter the downloaded icon Data corresponding to the given URL for each given city
     ///in a dictionary of City and Data
     private func getIconsData(
         fromUrls urls: [City: URL],
-        completion: @escaping (Result<[City: Data], NetworkError>) -> Void) {
+        completion: @escaping WeatherIconCompletion) {
 
         var iconsData: [City: Data] = [:]
 
@@ -163,24 +161,27 @@ class WeatherNetworkManager {
     }
 
     ///Returns a WeatherObject from the given WeatherResult
-    private func createWeatherObject(fromResponse response: WeatherResult) throws -> WeatherObject {
+    private func createWeatherObject(fromResponse response: WeatherResult) -> Result<WeatherObject, NetworkError> {
         let temperature = Int(response.main.temp)
         let temperatureMin = Int(response.main.tempMin)
         let temperatureMax = Int(response.main.tempMax)
         let name = response.name
-        guard let main = response.weather.first?.main else {throw NetworkError.cannotCreateWeatherObject}
-        guard let description = response.weather.first?.description else {throw NetworkError.cannotCreateWeatherObject}
-        guard let iconId = response.weather.first?.icon else {throw NetworkError.cannotCreateWeatherObject}
+
+        guard let firstWeather = response.weather.first else {
+            return .failure(NetworkError.cannotUnwrapFirstWeather)
+        }
+
+        let description = firstWeather.description
+        let iconId = firstWeather.icon
 
         let weather = WeatherObject(
             temperature: temperature,
             tempMin: temperatureMin,
             tempMax: temperatureMax,
             name: name,
-            main: main,
             description: description,
             iconId: iconId)
 
-        return weather
+        return .success(weather)
     }
 }

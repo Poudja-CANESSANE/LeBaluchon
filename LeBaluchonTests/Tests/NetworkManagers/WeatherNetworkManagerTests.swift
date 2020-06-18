@@ -9,7 +9,7 @@
 import XCTest
 @testable import LeBaluchon
 
-class WeatherTests: XCTestCase {
+class WeatherNetworkManagerTests: XCTestCase {
     // MARK: Test getWeathers()
 
     func testGetWeathersShouldFailIfError() {
@@ -102,7 +102,7 @@ class WeatherTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Wait")
         weatherNetworkManager.getWeathers(forCities: [City.savignyLeTemple]) { result in
             if case .failure(let networkError) = result {
-                XCTAssertEqual(networkError, NetworkError.cannotCreateWeatherObject)
+                XCTAssertEqual(networkError, NetworkError.cannotUnwrapFirstWeather)
             } else { XCTFail() }
             expectation.fulfill()
         }
@@ -115,7 +115,6 @@ class WeatherTests: XCTestCase {
             tempMin: 27,
             tempMax: 29,
             name: "Savigny-le-Temple",
-            main: "Clouds",
             description: "few clouds",
             iconId: "02d")
 
@@ -240,6 +239,7 @@ class WeatherTests: XCTestCase {
 
     // MARK: Tools
 
+    ///Returns a WeatherNetworkManager with a URLSessionFake from the given Data?, HTTPURLResponse? and Error?
     private func getWeatherNetworkManager(
         data: Data?,
         response: HTTPURLResponse?,
@@ -254,6 +254,7 @@ class WeatherTests: XCTestCase {
         return weatherNetworkManager
     }
 
+    ///Returns a WeatherNetworkManager with a URLSessionFake and a WeatherUrlProviderStub
     private func getWeatherNetworkManagerWithStubUrlProvider() -> WeatherNetworkManager {
         let sessionFake = URLSessionFake(data: nil, response: nil, error: nil)
 

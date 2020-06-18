@@ -10,7 +10,7 @@ import Foundation
 
 struct WeatherObject: Equatable {
     let temperature, tempMin, tempMax: Int
-    let name, main, description, iconId: String
+    let name, description, iconId: String
 }
 
 struct WeatherResult: Codable {
@@ -30,5 +30,5 @@ struct Main: Codable {
 }
 
 struct Weather: Codable {
-    let main, description, icon: String
+    let description, icon: String
 }

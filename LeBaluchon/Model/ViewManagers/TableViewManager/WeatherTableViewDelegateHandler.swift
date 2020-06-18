@@ -8,4 +8,4 @@
 
 import UIKit
 
-class WeatherTableViewDelegate: NSObject, UITableViewDelegate {}
+class WeatherTableViewDelegateHandler: NSObject, UITableViewDelegate {}

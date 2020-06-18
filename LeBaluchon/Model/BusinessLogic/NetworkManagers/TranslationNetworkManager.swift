@@ -11,6 +11,10 @@ import Foundation
 class TranslationNetworkManager {
     // MARK: - INTERNAL
 
+    typealias TranslationCompletion = (Result<Translation, NetworkError>) -> Void
+
+
+
     // MARK: Inits
 
     init(networkService: NetworkService,
@@ -27,7 +31,7 @@ class TranslationNetworkManager {
     func getTranslation(
         forTextToTranslate textToTranslate: String,
         inTargetLanguage targetLanguage: String,
-        completion: @escaping (Result<Translation, NetworkError>) -> Void) {
+        completion: @escaping TranslationCompletion) {
 
         guard let translationUrl = translationUrlProvider.getTranslationUrl(
             stringToTranslate: textToTranslate,
@@ -37,17 +41,11 @@ class TranslationNetworkManager {
         }
 
         networkService.fetchData(url: translationUrl) { [weak self] (result: Result<TranslationResult, NetworkError>) in
-            guard let self = self else {return}
             switch result {
-            case .failure(let networkError): completion(.failure(networkError))
+            case .failure(let networkError):
+                completion(.failure(networkError))
             case .success(let response):
-                do {
-                    let translation = try self.createTranslation(fromResponse: response)
-                    completion(.success(translation))
-                } catch {
-                    guard let error = error as? NetworkError else { return }
-                    completion(.failure(error))
-                }
+                self?.handleSucessfulTranslationResponse(response: response, completion: completion)
             }
         }
     }
@@ -65,20 +63,34 @@ class TranslationNetworkManager {
 
     // MARK: Methods
 
+    ///Returns by the completion parameter a Translation built from the TranslationResult
+    private func handleSucessfulTranslationResponse(
+        response: TranslationResult,
+        completion: @escaping TranslationCompletion) {
+
+        let translationResult = createTranslation(fromResponse: response)
+
+        switch translationResult {
+        case .failure(let networkError): completion(.failure(networkError))
+        case .success(let translation): completion(.success(translation))
+        }
+    }
+
     ///Returns a Translation from the given TranslationResult without the HTML character references
-    private func createTranslation(fromResponse response: TranslationResult) throws -> Translation {
-        guard var translatedText = response.data.translations.first?.translatedText else {
-            throw NetworkError.cannotCreateTranslation
+    private func createTranslation(fromResponse response: TranslationResult) -> Result<Translation, NetworkError> {
+
+        guard let firstTranslation = response.data.translations.first else {
+            return .failure(.cannotUnwrapFirstTranslation)
         }
 
-        guard let detectedSourceLanguage = response.data.translations.first?.detectedSourceLanguage else {
-            throw  NetworkError.cannotCreateTranslation
-        }
+        let translatedText = firstTranslation.translatedText
+        let detectedSourceLanguage = firstTranslation.detectedSourceLanguage
+        let encodedTranslatedText = replaceHTMLCharacterReferences(forString: translatedText)
 
-        translatedText = replaceHTMLCharacterReferences(forString: translatedText)
-
-        let translation = Translation(translatedText: translatedText, detectedSourceLanguage: detectedSourceLanguage)
-        return translation
+        let translation = Translation(
+            translatedText: encodedTranslatedText,
+            detectedSourceLanguage: detectedSourceLanguage)
+        return .success(translation)
     }
 
     ///Returns the given String by replacing the HTML character references by the corresponding character

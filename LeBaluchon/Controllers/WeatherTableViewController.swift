@@ -1,4 +1,4 @@
-//swiftlint:disable weak_delegate
+//
 //  WeatherTableViewViewController.swift
 //  LeBaluchon
 //
@@ -10,12 +10,6 @@ import UIKit
 
 class WeatherTableViewController: UIViewController {
     // MARK: - INTERNAL
-
-    // MARK: IBOutlets
-
-    @IBOutlet weak var tableView: UITableView!
-
-
 
     // MARK: Methods
 
@@ -33,6 +27,12 @@ class WeatherTableViewController: UIViewController {
 
     // MARK: - PRIVATE
 
+    // MARK: IBOutlets
+
+    @IBOutlet private weak var tableView: UITableView!
+
+
+
     // MARK: Properties
 
     private let weatherNetworkManager = WeatherNetworkManager(
@@ -41,14 +41,13 @@ class WeatherTableViewController: UIViewController {
 
     private let alertManager = ServiceContainer.alertManager
     private let weatherTableViewDataSource = WeatherTableViewDataSource()
-    private let weatherTableViewDelegate = WeatherTableViewDelegate()
+    private let weatherTableViewDelegateHandler = WeatherTableViewDelegateHandler()
 
-    private lazy var refresher: UIRefreshControl = {
+    private let refresher: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(updateUIWithDownloadedWeathers), for: .valueChanged)
         return refreshControl
     }()
-
 
 
     // MARK: Methods
@@ -56,14 +55,14 @@ class WeatherTableViewController: UIViewController {
     ///Sets the dataSource, the delegate and the refreshControl properties of the tableView
     private func setupTableView() {
         tableView.dataSource = weatherTableViewDataSource
-        tableView.delegate = weatherTableViewDelegate
+        tableView.delegate = weatherTableViewDelegateHandler
         tableView.refreshControl = refresher
     }
 
     ///Updates the UI with the downloaded weathers
     @objc private func updateUIWithDownloadedWeathers() {
         weatherNetworkManager.getWeathers(forCities: City.allCases) { [weak self] result in
-            guard let self = self else {return}
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
                 case .failure(let networkError):
@@ -80,10 +79,11 @@ class WeatherTableViewController: UIViewController {
     ///by downloading the icon Data from the given dictionary of City and icon ID
     private func downloadIconDataAndPopulateIconsData(fromIconsId iconsId: [City: String]) {
         weatherNetworkManager.getWeatherIconsData(forCitiesAndIconIds: iconsId) { [weak self] result in
-            guard let self = self else {return}
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
-                case .failure(let networkError): self.presentAlert(msg: networkError.message)
+                case .failure(let networkError):
+                    self.presentAlert(msg: networkError.message)
                 case .success(let iconsData):
                     self.assignValueToIconsDataAndEndRefreshing(iconsData: iconsData)
                 }

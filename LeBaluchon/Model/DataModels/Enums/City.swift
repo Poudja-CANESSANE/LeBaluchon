@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum City: String, CaseIterable {
+enum City: CaseIterable {
     case newYork
     case savignyLeTemple
     case paris
