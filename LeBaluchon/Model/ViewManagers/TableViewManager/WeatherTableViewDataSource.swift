@@ -11,6 +11,16 @@ import UIKit
 class WeatherTableViewDataSource: NSObject, UITableViewDataSource {
     // MARK: - INTERNAL
 
+    // MARK: Properties
+
+    ///Contains the icons ID corresponding a City
+    var iconsId: [City: String] = [:]
+
+    ///Contains the icons Data corresponding to a City
+    var iconsData: [City: Data] = [:]
+
+
+
     // MARK: Methods
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -56,12 +66,6 @@ class WeatherTableViewDataSource: NSObject, UITableViewDataSource {
 
     ///Contains the downloaded WeatherObject
     private var weathers: [WeatherObject]?
-
-    ///Contains the icons ID corresponding a City
-    var iconsId: [City: String] = [:]
-
-    ///Contains the icons Data corresponding to a City
-    var iconsData: [City: Data] = [:]
 
 
 
