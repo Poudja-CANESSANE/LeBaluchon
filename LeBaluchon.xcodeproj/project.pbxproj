@@ -234,8 +234,6 @@
 		AC3FC4D72471ADD70058581D /* Enums */ = {
 			isa = PBXGroup;
 			children = (
-				AC3FC4CD24701C8A0058581D /* NetworkError.swift */,
-				AC89E3C6247832E2008F9E89 /* Functionality.swift */,
 				AC89E3C824783309008F9E89 /* City.swift */,
 				AC1A4A452492B98F00C72EF7 /* CellId.swift */,
 			);
@@ -263,6 +261,7 @@
 		AC8826A7246B521900EE06B2 /* LeBaluchon */ = {
 			isa = PBXGroup;
 			children = (
+				ACE79A9E249F962A002B07E4 /* Networking */,
 				AC8826CB246B523A00EE06B2 /* Model */,
 				AC8826CC246B524300EE06B2 /* View */,
 				AC8826CD246B524900EE06B2 /* Controllers */,
@@ -296,8 +295,6 @@
 			isa = PBXGroup;
 			children = (
 				AC171251249959E30087B88C /* DataModels */,
-				ACC7518924884D83009B60BC /* BusinessLogic */,
-				ACC7518624884CF4009B60BC /* ViewManagers */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -314,6 +311,7 @@
 		AC8826CD246B524900EE06B2 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				ACC7518624884CF4009B60BC /* ViewManagers */,
 				AC8826CE246B532100EE06B2 /* CurrencyViewController.swift */,
 				AC8826D0246B533200EE06B2 /* TranslationViewController.swift */,
 				AC8826D2246B533E00EE06B2 /* WeatherTableViewController.swift */,
@@ -389,15 +387,6 @@
 			path = ViewManagers;
 			sourceTree = "<group>";
 		};
-		ACC7518924884D83009B60BC /* BusinessLogic */ = {
-			isa = PBXGroup;
-			children = (
-				AC89E3D124784FBE008F9E89 /* ServiceContainer */,
-				AC3FC4D52471AD750058581D /* NetworkManagers */,
-			);
-			path = BusinessLogic;
-			sourceTree = "<group>";
-		};
 		ACCDC8372488640500EA5C54 /* JSONResponses */ = {
 			isa = PBXGroup;
 			children = (
@@ -415,6 +404,25 @@
 				ACF5B9BE24998FFC0080200B /* URLSessionDataTaskFake.swift */,
 			);
 			path = Doubles;
+			sourceTree = "<group>";
+		};
+		ACE79A9E249F962A002B07E4 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				ACE79A9F249F96ED002B07E4 /* Enums */,
+				AC89E3D124784FBE008F9E89 /* ServiceContainer */,
+				AC3FC4D52471AD750058581D /* NetworkManagers */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		ACE79A9F249F96ED002B07E4 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				AC3FC4CD24701C8A0058581D /* NetworkError.swift */,
+				AC89E3C6247832E2008F9E89 /* Functionality.swift */,
+			);
+			path = Enums;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

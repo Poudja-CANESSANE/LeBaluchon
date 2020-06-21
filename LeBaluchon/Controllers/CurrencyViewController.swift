@@ -85,7 +85,7 @@ class CurrencyViewController: UIViewController {
             return
         }
 
-        let convertedAmount = (amountToConvertDouble * usRate)
+        let convertedAmount = amountToConvertDouble * usRate
         let formattedAmount = format(amount: convertedAmount)
         convertedAmountLabel.text = formattedAmount + "$"
     }
