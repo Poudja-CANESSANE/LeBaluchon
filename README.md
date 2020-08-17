@@ -1,5 +1,5 @@
 # Le Baluchon
-This project is the sixth of the iOS Developer path from OpenClassrooms.  
+This project is the ninth of the iOS Developer path from OpenClassrooms.  
 It is a 3 page app so I used a Tab Bar for the navigation. There is at least 1 network call on each page.
 
 
